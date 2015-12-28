@@ -2,6 +2,7 @@
 
 namespace NavJobs\LaravelApi;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Routing\Controller as BaseController;
 
