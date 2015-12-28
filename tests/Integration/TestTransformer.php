@@ -2,9 +2,9 @@
 
 namespace NavJobs\LaravelApi\Test\Integration;
 
-use League\Fractal\TransformerAbstract;
+use NavJobs\LaravelApi\Transformer;
 
-class TestTransformer extends TransformerAbstract
+class TestTransformer extends Transformer
 {
     /**
      * List of resources possible to include.
