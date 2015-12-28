@@ -191,4 +191,14 @@ abstract class Controller extends BaseController
     {
         return $this->setStatusCode(400)->respondWithError($message, self::CODE_WRONG_ARGS);
     }
+
+    /**
+     * Determine the includes requested by the user.
+     *
+     * @return array
+     */
+    protected function getRequestedIncludes()
+    {
+        return explode(',', request('include'));
+    }
 }
