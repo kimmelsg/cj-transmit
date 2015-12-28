@@ -13,7 +13,32 @@ abstract class Transformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $validParameters;
+    protected $validParameters = ['limit', 'order'];
+
+    /**
+     * Apply valid parameters to the query builder.
+     *
+     * @param Illuminate\Database\Eloquent\Builder|Illuminate\Database\Eloquent\Relations\Relation $builder
+     * @param ParamBag $parameters
+     * @return mixed
+     * @throws InvalidParameters
+     */
+    public function applyParameters($builder, ParamBag $parameters)
+    {
+        $this->validateParameters($parameters);
+
+        if ($parameters['limit']) {
+            list($limit, $offset) = $parameters->limit;
+            $builder->take($limit)->skip($offset);
+        }
+
+        if ($parameters['order']) {
+            list($orderColumn, $orderBy) = $parameters->order;
+            $builder->orderBy($orderColumn, $orderBy);
+        }
+
+        return $builder;
+    }
 
     /**
      * Checks if the provided parameters are valid.
