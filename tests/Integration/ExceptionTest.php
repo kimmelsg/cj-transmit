@@ -1,8 +1,8 @@
 <?php
 
-namespace Spatie\Fractal\Test\Integration;
+namespace NavJobs\LaravelApi\Test\Integration;
 
-use Spatie\Fractal\Exceptions\NoTransformerSpecified;
+use NavJobs\LaravelApi\Exceptions\NoTransformerSpecified;
 
 class ExceptionTest extends TestCase
 {

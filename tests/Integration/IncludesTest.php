@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Fractal\Test\Integration;
+namespace NavJobs\LaravelApi\Test\Integration;
 
 class IncludesTest extends TestCase
 {
@@ -27,12 +27,12 @@ class IncludesTest extends TestCase
      */
     public function it_provides_a_convenience_method_to_include_includes()
     {
-        $resultWithParseIncludes = fractal()
+        $resultWithParseIncludes = $this->fractal
             ->collection($this->testBooks, new TestTransformer())
             ->parseIncludes('characters')
             ->toArray();
 
-        $resultWithParseCharacters = fractal()
+        $resultWithParseCharacters = $this->fractal
             ->collection($this->testBooks, new TestTransformer())
             ->includeCharacters()
             ->toArray();

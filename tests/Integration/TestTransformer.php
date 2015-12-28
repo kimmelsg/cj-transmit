@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Fractal\Test\Integration;
+namespace NavJobs\LaravelApi\Test\Integration;
 
 use League\Fractal\TransformerAbstract;
 

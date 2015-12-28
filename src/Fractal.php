@@ -5,8 +5,8 @@ namespace NavJobs\LaravelApi;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\PaginatorInterface;
 use League\Fractal\Serializer\SerializerAbstract;
-use Spatie\Fractal\Exceptions\InvalidTransformation;
-use Spatie\Fractal\Exceptions\NoTransformerSpecified;
+use NavJobs\LaravelApi\Exceptions\InvalidTransformation;
+use NavJobs\LaravelApi\Exceptions\NoTransformerSpecified;
 
 class Fractal
 {
@@ -76,6 +76,10 @@ class Fractal
     {
         $this->resourceName = $resourceName;
 
+        if ($transformer) {
+            $this->transformWith($transformer);
+        }
+
         return $this->data('collection', $data, $transformer);
     }
 
@@ -91,6 +95,10 @@ class Fractal
     public function item($data, $transformer = null, $resourceName = null)
     {
         $this->resourceName = $resourceName;
+
+        if ($transformer) {
+            $this->transformWith($transformer);
+        }
 
         return $this->data('item', $data, $transformer);
     }
@@ -163,27 +171,6 @@ class Fractal
         $this->includes = array_merge($this->includes, (array)$includes);
 
         return $this;
-    }
-
-    /**
-     * Returns the includes that are available for eager loading.
-     *
-     * @param array|string $requestedIncludes Array of csv string
-     *
-     * @return $this
-     */
-    public function getEagerLoads($requestedIncludes)
-    {
-        if (is_string($requestedIncludes)) {
-            $requestedIncludes = array_map(function ($value) {
-                return trim($value);
-            },  explode(',', $requestedIncludes));
-        }
-
-        $availableRequestedIncludes = array_intersect($this->transformer->getAvailableIncludes(), $requestedIncludes);
-        $defaultIncludes = $this->transformer->getDefaultIncludes();
-
-        return array_merge($availableRequestedIncludes, $defaultIncludes);
     }
 
     /**
@@ -277,9 +264,6 @@ class Fractal
      * @param string $conversionMethod
      *
      * @return string|array
-     *
-     * @throws \Spatie\Fractal\Exceptions\InvalidTransformation
-     * @throws \Spatie\Fractal\Exceptions\NoTransformerSpecified
      */
     protected function transform($conversionMethod)
     {
@@ -290,11 +274,6 @@ class Fractal
 
     /**
      * Create fractal data.
-     *
-     * @return \League\Fractal\Scope
-     *
-     * @throws \Spatie\Fractal\Exceptions\InvalidTransformation
-     * @throws \Spatie\Fractal\Exceptions\NoTransformerSpecified
      */
     public function createData()
     {
@@ -317,10 +296,6 @@ class Fractal
 
     /**
      * Get the resource.
-     *
-     * @return \League\Fractal\Resource\ResourceInterface
-     *
-     * @throws \Spatie\Fractal\Exceptions\InvalidTransformation
      */
     public function getResource()
     {

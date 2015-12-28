@@ -1,16 +1,13 @@
 <?php
 
-namespace Spatie\Fractal\Test\Integration;
+namespace NavJobs\LaravelApi\Test\Integration;
 
+use NavJobs\LaravelApi\Fractal;
+use NavJobs\LaravelApi\FractalServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Spatie\Fractal\Fractal;
-use Spatie\Fractal\FractalServiceProvider;
 
 abstract class TestCase extends Orchestra
 {
-    /**
-     * @var \Spatie\Fractal\Fractal
-     */
     protected $fractal;
 
     /**
@@ -62,13 +59,6 @@ abstract class TestCase extends Orchestra
         return [FractalServiceProvider::class];
     }
 
-    protected function getPackageAliases($app)
-    {
-        return [
-            'Fractal' => 'Spatie\Fractal\FractalFacade',
-        ];
-    }
-
     /**
      * Define environment setup.
      *
@@ -77,7 +67,7 @@ abstract class TestCase extends Orchestra
     protected function getEnvironmentSetUp($app)
     {
         if ($this->defaultSerializer != '') {
-            $app['config']->set('laravel-fractal.default_serializer', $this->defaultSerializer);
+            $app['config']->set('laravel-api.default_serializer', $this->defaultSerializer);
         }
     }
 }

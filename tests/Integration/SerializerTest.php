@@ -1,8 +1,8 @@
 <?php
 
-namespace Spatie\Fractal\Test\Integration;
+namespace NavJobs\LaravelApi\Test\Integration;
 
-use Spatie\Fractal\ArraySerializer;
+use NavJobs\LaravelApi\ArraySerializer;
 
 class SerializerTest extends TestCase
 {

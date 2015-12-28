@@ -3,8 +3,8 @@
 namespace Spatie\Fractal\Test;
 
 use League\Fractal\Manager;
-use Spatie\Fractal\ArraySerializer;
-use Spatie\Fractal\Fractal;
+use NavJobs\LaravelApi\ArraySerializer;
+use NavJobs\LaravelApi\Fractal;
 
 class FractalTest extends \PHPUnit_Framework_TestCase
 {

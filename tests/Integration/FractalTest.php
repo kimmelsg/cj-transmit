@@ -1,6 +1,9 @@
 <?php
 
-namespace Spatie\Fractal\Test\Integration;
+namespace NavJobs\LaravelApi\Test\Integration;
+
+use League\Fractal\Resource\ResourceInterface;
+use League\Fractal\Scope;
 
 class FractalTest extends TestCase
 {
@@ -95,7 +98,7 @@ class FractalTest extends TestCase
             ->collection($this->testBooks, new TestTransformer())
             ->getResource();
 
-        $this->assertInstanceOf(\League\Fractal\Resource\ResourceInterface::class, $resource);
+        $this->assertInstanceOf(ResourceInterface::class, $resource);
     }
 
     /**
@@ -107,6 +110,6 @@ class FractalTest extends TestCase
             ->collection($this->testBooks, new TestTransformer())
             ->createData();
 
-        $this->assertInstanceOf(\League\Fractal\Scope::class, $resource);
+        $this->assertInstanceOf(Scope::class, $resource);
     }
 }
