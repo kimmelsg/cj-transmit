@@ -1,25 +1,16 @@
 {
-    "name": "spatie/laravel-fractal",
-    "description": "A Fractal service provider for Laravel 5",
+    "name": "navjobs/laravel-api",
+    "description": "A collection of Laravel api base classes and helpers.",
     "keywords": [
         "spatie",
         "laravel-fractal",
         "laravel",
         "fractal",
-        "lumen",
         "api",
         "transform"
     ],
-    "homepage": "https://github.com/spatie/laravel-fractal",
+    "homepage": "https://kimmel.com",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Freek Van der Herten",
-            "email": "freek@spatie.be",
-            "homepage": "https://spatie.be",
-            "role": "Developer"
-        }
-    ],
     "require": {
         "php" : ">=5.5.0",
         "league/fractal": "^0.13.0",
@@ -32,12 +23,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Spatie\\Fractal\\": "src"
+            "NavJobs\\LaravelApi\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spatie\\Fractal\\Test\\": "tests"
+            "NavJobs\\LaravelApi\\Test\\": "tests"
         }
     },
     "scripts": {

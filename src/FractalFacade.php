@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Fractal;
+namespace NavJobs\LaravelApi;
 
 use Illuminate\Support\Facades\Facade;
 

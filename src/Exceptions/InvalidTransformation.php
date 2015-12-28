@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Fractal\Exceptions;
+namespace NavJobs\LaravelApi\Exceptions;
 
 use Exception;
 

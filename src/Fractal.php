@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Fractal;
+namespace NavJobs\LaravelApi;
 
 use League\Fractal\Manager;
 use League\Fractal\Pagination\PaginatorInterface;

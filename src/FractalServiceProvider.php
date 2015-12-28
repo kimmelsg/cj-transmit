@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Fractal;
+namespace NavJobs\LaravelApi;
 
 use Illuminate\Support\ServiceProvider;
 use League\Fractal\Manager;
@@ -14,7 +14,7 @@ class FractalServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../resources/config/laravel-fractal.php' => config_path('laravel-fractal.php'),
+            __DIR__.'/../resources/config/laravel-api.php' => config_path('laravel-api.php'),
         ], 'config');
     }
 
@@ -23,7 +23,7 @@ class FractalServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../resources/config/laravel-fractal.php', 'laravel-fractal');
+        $this->mergeConfigFrom(__DIR__.'/../resources/config/laravel-api.php', 'laravel-api');
 
         $this->app->bind(Fractal::class, function () {
 
@@ -31,7 +31,7 @@ class FractalServiceProvider extends ServiceProvider
 
             $fractal = new Fractal($manager);
 
-            $config = $this->app['config']->get('laravel-fractal');
+            $config = $this->app['config']->get('laravel-api');
 
             if (!empty($config['default_serializer'])) {
                 $fractal = $this->setDefaultSerializer($fractal, $config['default_serializer']);
@@ -39,10 +39,6 @@ class FractalServiceProvider extends ServiceProvider
 
             return $fractal;
         });
-
-        $this->app->alias(Fractal::class, 'laravel-fractal');
-
-        include __DIR__.'/helpers.php';
     }
 
     /**
