@@ -1,8 +1,7 @@
 <?php
 
-namespace NavJobs\Fractal;
+namespace NavJobs\LaravelApi;
 
-use NavJobs\LaravelApi\Fractal;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Routing\Controller as BaseController;
 
