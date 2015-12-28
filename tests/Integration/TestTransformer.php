@@ -17,6 +17,16 @@ class TestTransformer extends Transformer
     ];
 
     /**
+     * List of valid parameters.
+     *
+     * @var array
+     */
+    protected $validParameters = [
+        'limit',
+        'order'
+    ];
+
+    /**
      * @param array $book
      *
      * @return array
