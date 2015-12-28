@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\SerializerAbstract;
 
-class FractalServiceProvider extends ServiceProvider
+class LaravelApiServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -44,7 +44,7 @@ class FractalServiceProvider extends ServiceProvider
     /**
      * Set the default serializer.
      *
-     * @param \Spatie\Fractal\Fractal                              $fractal
+     * @param $fractal
      * @param string|\League\Fractal\Serializer\SerializerAbstract $serializer
      *
      * @return mixed

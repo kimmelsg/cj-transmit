@@ -10,7 +10,7 @@ class EagerLoadTest extends TestCase
     public function it_correctly_parses_a_string_of_includes()
     {
         $transformer = new TestTransformer();
-        $array = $transformer->getEagerLoads('characters.test,books,publisher');
+        $array = $transformer->getEagerLoads('characters,books,publisher');
 
         $expectedArray = [
             'characters',

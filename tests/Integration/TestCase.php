@@ -3,7 +3,7 @@
 namespace NavJobs\LaravelApi\Test\Integration;
 
 use NavJobs\LaravelApi\Fractal;
-use NavJobs\LaravelApi\FractalServiceProvider;
+use NavJobs\LaravelApi\LaravelApiServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
@@ -56,7 +56,7 @@ abstract class TestCase extends Orchestra
      */
     protected function getPackageProviders($app)
     {
-        return [FractalServiceProvider::class];
+        return [LaravelApiServiceProvider::class];
     }
 
     /**
