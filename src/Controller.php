@@ -5,6 +5,7 @@ namespace NavJobs\LaravelApi;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Routing\Controller as BaseController;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 
 abstract class Controller extends BaseController
 {
@@ -93,6 +94,25 @@ abstract class Controller extends BaseController
     protected function respondWithCollection($collection, $callback, $resourceKey = null)
     {
         $rootScope = $this->fractal->collection($collection, $callback, $resourceKey);
+
+        return $this->respondWithArray($rootScope->toArray());
+    }
+
+    /**
+     * Returns a json response that contains the specified paginated collection
+     * passed through fractal and optionally a transformer.
+     *
+     * @param $collection
+     * @param $callback
+     * @param $paginator
+     * @param null $resourceKey
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondWithPaginatedCollection($collection, $callback, $paginator, $resourceKey = null)
+    {
+        $rootScope = $this->fractal
+            ->collection($collection, $callback, $resourceKey)
+            ->paginateWith(new IlluminatePaginatorAdapter($paginator));
 
         return $this->respondWithArray($rootScope->toArray());
     }
