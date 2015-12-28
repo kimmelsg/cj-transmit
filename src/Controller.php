@@ -201,4 +201,14 @@ abstract class Controller extends BaseController
     {
         return explode(',', request('include'));
     }
+
+    /**
+     * Returns an array of Query Parameters, not including pagination.
+     *
+     * @return array
+     */
+    protected function getQueryParameters()
+    {
+        return array_diff_key($_GET, array_flip(['page']));
+    }
 }
