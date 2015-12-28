@@ -166,6 +166,27 @@ class Fractal
     }
 
     /**
+     * Returns the includes that are available for eager loading.
+     *
+     * @param array|string $requestedIncludes Array of csv string
+     *
+     * @return $this
+     */
+    public function getEagerLoads($requestedIncludes)
+    {
+        if (is_string($requestedIncludes)) {
+            $requestedIncludes = array_map(function ($value) {
+                return trim($value);
+            },  explode(',', $requestedIncludes));
+        }
+
+        $availableRequestedIncludes = array_intersect($this->transformer->getAvailableIncludes(), $requestedIncludes);
+        $defaultIncludes = $this->transformer->getDefaultIncludes();
+
+        return array_merge($availableRequestedIncludes, $defaultIncludes);
+    }
+
+    /**
      * Support for magic methods to included data.
      *
      * @param string $name
