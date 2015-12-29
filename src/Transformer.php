@@ -13,7 +13,7 @@ abstract class Transformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $validParameters = ['limit', 'order'];
+    protected $validParameters = ['limit', 'sort'];
 
     /**
      * Apply valid parameters to the query builder.
@@ -32,9 +32,9 @@ abstract class Transformer extends TransformerAbstract
             $builder->take($limit)->skip($offset);
         }
 
-        if ($parameters['order']) {
-            list($orderColumn, $orderBy) = $parameters->order;
-            $builder->orderBy($orderColumn, $orderBy);
+        if ($parameters['sort']) {
+            list($sort, $order) = $parameters->sort;
+            $builder->orderBy($sort, $order);
         }
 
         return $builder;
