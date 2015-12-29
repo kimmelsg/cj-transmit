@@ -33,7 +33,7 @@ abstract class Controller extends BaseController
      *
      * @return int
      */
-    public function getStatusCode()
+    protected function getStatusCode()
     {
         return $this->statusCode;
     }
@@ -44,7 +44,7 @@ abstract class Controller extends BaseController
      * @param $statusCode
      * @return $this
      */
-    public function setStatusCode($statusCode)
+    protected function setStatusCode($statusCode)
     {
         $this->statusCode = $statusCode;
 
@@ -191,7 +191,7 @@ abstract class Controller extends BaseController
      * @param string $message
      * @return \Illuminate\Http\JsonResponse
      */
-    public function errorForbidden($message = 'Forbidden')
+    protected function errorForbidden($message = 'Forbidden')
     {
         return $this->setStatusCode(403)->respondWithError($message, self::CODE_FORBIDDEN);
     }
@@ -202,7 +202,7 @@ abstract class Controller extends BaseController
      * @param string $message
      * @return \Illuminate\Http\JsonResponse
      */
-    public function errorInternalError($message = 'Internal Error')
+    protected function errorInternalError($message = 'Internal Error')
     {
         return $this->setStatusCode(500)->respondWithError($message, self::CODE_INTERNAL_ERROR);
     }
@@ -213,7 +213,7 @@ abstract class Controller extends BaseController
      * @param string $message
      * @return \Illuminate\Http\JsonResponse
      */
-    public function errorNotFound($message = 'Resource Not Found')
+    protected function errorNotFound($message = 'Resource Not Found')
     {
         return $this->setStatusCode(404)->respondWithError($message, self::CODE_NOT_FOUND);
     }
@@ -224,7 +224,7 @@ abstract class Controller extends BaseController
      * @param string $message
      * @return \Illuminate\Http\JsonResponse
      */
-    public function errorUnauthorized($message = 'Unauthorized')
+    protected function errorUnauthorized($message = 'Unauthorized')
     {
         return $this->setStatusCode(401)->respondWithError($message, self::CODE_UNAUTHORIZED);
     }
@@ -235,7 +235,7 @@ abstract class Controller extends BaseController
      * @param string $message
      * @return \Illuminate\Http\JsonResponse
      */
-    public function errorWrongArgs($message = 'Wrong Arguments')
+    protected function errorWrongArgs($message = 'Wrong Arguments')
     {
         return $this->setStatusCode(400)->respondWithError($message, self::CODE_WRONG_ARGS);
     }
