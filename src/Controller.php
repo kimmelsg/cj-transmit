@@ -247,7 +247,15 @@ abstract class Controller extends BaseController
      */
     protected function getRequestedIncludes()
     {
-        return explode(',', request('include'));
+        $includes = explode(',', request('include'));
+
+        return array_map(function ($value) {
+            if (str_contains($value, ':')) {
+                return substr($value, 0, strpos($value, ':'));
+            }
+
+            return $value;
+        }, $includes);
     }
 
     /**
