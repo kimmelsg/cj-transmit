@@ -58,10 +58,12 @@ class TransformerTest extends TestCase
         $transformer = new TestTransformer();
         $valid = $transformer->validateParameters(new ParamBag([
             'limit' => [
-                '1' => '1'
+                0 => '1',
+                1 => '1'
             ],
-            'order' => [
-                'created_at' => 'desc'
+            'sort' => [
+                0 => 'created_at',
+                1 => 'desc'
             ]
         ]));
 
