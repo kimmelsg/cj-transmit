@@ -47,7 +47,7 @@ abstract class Transformer extends TransformerAbstract
      * @return bool
      * @throws InvalidParameters
      */
-    public function validateParameters(ParamBag $parameters)
+    private function validateParameters(ParamBag $parameters)
     {
         $usedParameters = array_keys(iterator_to_array($parameters));
         if ($invalidParams = array_diff($usedParameters, $this->validParameters)) {
