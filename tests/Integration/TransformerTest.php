@@ -50,25 +50,6 @@ class TransformerTest extends TestCase
         $this->assertEquals($expectedArray, $array);
     }
 
-    /**
-     * @test
-     */
-    public function it_accepts_valid_parameters()
-    {
-        $transformer = new TestTransformer();
-        $valid = $transformer->validateParameters(new ParamBag([
-            'limit' => [
-                0 => '1',
-                1 => '1'
-            ],
-            'sort' => [
-                0 => 'created_at',
-                1 => 'desc'
-            ]
-        ]));
-
-        $this->assertEquals(true, $valid);
-    }
 
     /**
      * @test
@@ -76,8 +57,10 @@ class TransformerTest extends TestCase
      */
     public function it_throws_an_exception_for_invalid_parameters()
     {
+        $builder = new TestBuilder();
+
         $transformer = new TestTransformer();
-        $transformer->validateParameters(new ParamBag([
+        $transformer->applyParameters($builder, new ParamBag([
             'not-valid' => [
                 0 => '1'
             ]
