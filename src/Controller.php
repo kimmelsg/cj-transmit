@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Routing\Controller as BaseController;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 abstract class Controller extends BaseController
 {
@@ -247,5 +248,25 @@ abstract class Controller extends BaseController
     protected function getRequestedIncludes()
     {
         return explode(',', request('include'));
+    }
+
+    /**
+     * Apply query parameters to the supplied query builder.
+     *
+     * @param $builder
+     * @param ParameterBag $parameters
+     * @return mixed
+     */
+    protected function applyParameters($builder, ParameterBag $parameters)
+    {
+        if ($parameters->get('sort')) {
+            $builder->orderBy($parameters->get('sort'), $parameters->get('order'));
+        }
+
+        if ($parameters->get('limit')) {
+            $builder->take($parameters->get('limit'))->skip($parameters->get('offset'));
+        }
+
+        return $builder;
     }
 }
