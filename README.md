@@ -1,9 +1,92 @@
 # Laravel Api
 An API package for Laravel. Utilizing [laravel-fractal](https://github.com/spatie/laravel-fractal/tree/master/src).
 
+## Install
+
+You can pull in the package via composer:
+``` bash
+$ composer require NavJobs/laravel-api
+```
+
+Next up, the service provider must be registered:
+
+```php
+// Laravel5: config/app.php
+'providers' => [
+    ...
+    NavJobs\LaravelApi\LaravelApiServiceProvider::class,
+
+];
+```
+
+If you want to change the default serializer, you must publish the config file:
+
+```bash
+php artisan vendor:publish --provider="NavJobs\LaravelApi\LaravelApiServiceProvider"
+```
+
+This is the contents of the published file:
+
+```php
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Serializer
+    |--------------------------------------------------------------------------
+    |
+    | The default serializer to be used when performing a transformation. It
+    | may be left empty to use Fractal's default one. This can either be a
+    | string or a League\Fractal\Serializer\SerializerAbstract subclass.
+    |
+    */
+
+    'default_serializer' => '',
+
+];
+```
+
+
 ## Api
 
 API Controller documentation coming soon.
+
+## Transformer
+
+Fractal's Transformers lazy load all includes by default, by extending NavJobs\LaravelApi\Transformer you can easily
+eager load includes instead:
+
+```php
+$transformer = new UserTransformer;
+
+$eagerloads = $transformer->getEagerLoads(request('include'));
+
+$books = Book::with($eagerLoads)->get();
+```
+
+Includes can be sorted by query parameters, the URL format is:
+
+```
+http://www.example.com/books?include=authors:limit(5|1):order(created_at|asc)
+```
+
+This package makes this a cinch to implement in your Transformers:
+
+```php
+//Transformer class
+
+public function includeAuthors(Book $book, ParamBag $parameters = null)
+{
+    $transformer = new AuthorTransformer();
+    $authors = $book->authors();
+
+    if ($parameters) {
+        $authors = $transformer->applyParameters($authors, $parameters);
+    }
+
+    return $this->collection($authors->get(), $transformer);
+}
+```
 
 ## Fractal
 
@@ -39,50 +122,7 @@ $fractal
    ->toArray();
 ```
 
-## Install
 
-You can pull in the package via composer:
-``` bash
-$ composer require NavJobs/laravel-api
-```
-
-Next up, the service provider must be registered:
-
-```php
-// Laravel5: config/app.php
-'providers' => [
-    ...
-    NavJobs\LaravelApi\FractalServiceProvider::class,
-
-];
-```
-
-If you want to change the default serializer, you must publish the config file:
-
-```bash
-php artisan vendor:publish --provider="NavJobs\LaravelApi\LaravelApiServiceProvider"
-```
-
-This is the contents of the published file:
-
-```php
-return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default Serializer
-    |--------------------------------------------------------------------------
-    |
-    | The default serializer to be used when performing a transformation. It
-    | may be left empty to use Fractal's default one. This can either be a
-    | string or a League\Fractal\Serializer\SerializerAbstract subclass.
-    |
-    */
-
-    'default_serializer' => '',
-
-];
-```
 
 ## Usage
 
@@ -134,7 +174,7 @@ A single item can also be transformed:
 $fractal->item($books[0], new BookTransformer())->toArray();
 ```
 
-##Using a serializer
+## Using a serializer
 
 Let's take a look again a the output of the first example:
 
@@ -185,18 +225,6 @@ $fractal
    ->includeCharacters()
    ->includePublisher()
    ->toArray();
-```
-
-## Eager Loads
-
-Fractal lazy loads all includes by default, by extending NavJobs\LaravelApi\Transformer you can easily eager load instead:
-
-```php
-$transformer = new UserTransformer;
-
-$eagerloads = $transformer->getEagerLoads(request('include'));
-
-$books = Book::with($eagerLoads)->get();
 ```
 
 ## Including meta data
