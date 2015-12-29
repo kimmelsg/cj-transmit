@@ -1,3 +1,12 @@
+# Laravel Api
+An API package for Laravel. Utilizing [laravel-fractal](https://github.com/spatie/laravel-fractal/tree/master/src).
+
+## Api
+
+API Controller documentation coming soon.
+
+## Fractal
+
 Using Fractal data can be transformed like this:
 
 ```php
@@ -258,13 +267,9 @@ $fractal
 $ composer test
 ```
 
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
 ## Credits
 
-- [The League of Extraordinary Packages](https://http://fractal.thephpleague.com/)
+- [The League of Extraordinary Packages](http://fractal.thephpleague.com/)
 - [Spatie](https://spatie.be/)
 
 ## License
