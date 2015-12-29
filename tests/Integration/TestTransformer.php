@@ -23,7 +23,7 @@ class TestTransformer extends Transformer
      */
     protected $validParameters = [
         'limit',
-        'order'
+        'sort'
     ];
 
     /**
