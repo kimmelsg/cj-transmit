@@ -2,6 +2,7 @@
 
 namespace NavJobs\LaravelApi;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Routing\Controller as BaseController;
@@ -104,17 +105,42 @@ abstract class Controller extends BaseController
      *
      * @param $collection
      * @param $callback
-     * @param $paginator
+     * @param int $perPage
      * @param null $resourceKey
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithPaginatedCollection($collection, $callback, $paginator, $resourceKey = null)
+    protected function respondWithPaginatedCollection($collection, $callback, $perPage = 10, $resourceKey = null)
     {
+        $paginator = $this->paginateCollection($collection, $perPage);
+
         $rootScope = $this->fractal
             ->collection($collection, $callback, $resourceKey)
             ->paginateWith(new IlluminatePaginatorAdapter($paginator));
 
         return $this->respondWithArray($rootScope->toArray());
+    }
+
+    /**
+     * @param $collection
+     * @param $perPage
+     * @return LengthAwarePaginator
+     */
+    protected function paginateCollection($collection, $perPage)
+    {
+        $paginator = new LengthAwarePaginator($collection, $collection->count(), $perPage);
+        $paginator->appends($this->getQueryParameters());
+
+        return $paginator;
+    }
+
+    /**
+     * Returns an array of Query Parameters, not including pagination.
+     *
+     * @return array
+     */
+    protected function getQueryParameters()
+    {
+        return array_diff_key($_GET, array_flip(['page']));
     }
 
     /**
@@ -221,15 +247,5 @@ abstract class Controller extends BaseController
     protected function getRequestedIncludes()
     {
         return explode(',', request('include'));
-    }
-
-    /**
-     * Returns an array of Query Parameters, not including pagination.
-     *
-     * @return array
-     */
-    protected function getQueryParameters()
-    {
-        return array_diff_key($_GET, array_flip(['page']));
     }
 }
