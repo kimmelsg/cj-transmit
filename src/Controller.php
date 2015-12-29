@@ -3,6 +3,7 @@
 namespace NavJobs\LaravelApi;
 
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Routing\Controller as BaseController;
@@ -128,7 +129,13 @@ abstract class Controller extends BaseController
      */
     protected function paginateCollection($collection, $perPage)
     {
-        $paginator = new LengthAwarePaginator($collection, $collection->count(), $perPage);
+        $paginator = new LengthAwarePaginator(
+            $collection,
+            $collection->count(),
+            $perPage,
+            Paginator::resolveCurrentPage(),
+            ['path' => Paginator::resolveCurrentPath()]
+        );
         $paginator->appends($this->getQueryParameters());
 
         return $paginator;
