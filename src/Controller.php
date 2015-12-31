@@ -2,16 +2,18 @@
 
 namespace NavJobs\LaravelApi;
 
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Pagination\LengthAwarePaginator;
+use NavJobs\LaravelApi\Traits\ApplyParametersTrait;
 use Illuminate\Routing\Controller as BaseController;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 abstract class Controller extends BaseController
 {
+    use ApplyParametersTrait;
+
     const CODE_WRONG_ARGS = 'GEN-WRONG-ARGS';
     const CODE_NOT_FOUND = 'GEN-NOT-FOUND';
     const CODE_INTERNAL_ERROR = 'GEN-INTERNAL-ERROR';
