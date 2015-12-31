@@ -268,22 +268,25 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * Apply query parameters to the supplied query builder.
+     * Eager loads the provided includes on the specified model.
      *
-     * @param $builder
-     * @param ParameterBag $parameters
+     * @param $resumes
+     * @param $includes
      * @return mixed
      */
-    protected function applyParameters($builder, ParameterBag $parameters)
+    protected function eagerLoadIncludes($resumes, $includes)
     {
-        if ($parameters->get('sort')) {
-            $builder->orderBy($parameters->get('sort'), $parameters->get('order'));
+        foreach ($includes as $include) {
+            $resumes = $resumes->with([
+                $include => function ($query) use ($include) {
+                    $parameters = $this->fractal->getIncludeParams($include);
+                    $query = $this->applyParameters($query, $parameters);
+
+                    return $query;
+                }
+            ]);
         }
 
-        if ($parameters->get('limit')) {
-            $builder->take($parameters->get('limit'))->skip($parameters->get('offset'));
-        }
-
-        return $builder;
+        return $resumes;
     }
 }
