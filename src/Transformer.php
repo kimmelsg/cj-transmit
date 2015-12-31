@@ -9,59 +9,6 @@ use NavJobs\LaravelApi\Exceptions\InvalidParameters;
 abstract class Transformer extends TransformerAbstract
 {
     /**
-     * An array of allowed parameters.
-     *
-     * @var array
-     */
-    protected $validParameters = ['limit', 'sort'];
-
-    /**
-     * Apply valid parameters to the query builder.
-     *
-     * @param Illuminate\Database\Eloquent\Builder|Illuminate\Database\Eloquent\Relations\Relation $builder
-     * @param ParamBag $parameters
-     * @return mixed
-     * @throws InvalidParameters
-     */
-    public function applyParameters($builder, ParamBag $parameters)
-    {
-        $this->validateParameters($parameters);
-
-        if ($parameters['limit']) {
-            list($limit, $offset) = $parameters->limit;
-            $builder->take($limit)->skip($offset);
-        }
-
-        if ($parameters['sort']) {
-            list($sort, $order) = $parameters->sort;
-            $builder->orderBy($sort, $order);
-        }
-
-        return $builder;
-    }
-
-    /**
-     * Checks if the provided parameters are valid.
-     *
-     * @param ParamBag $parameters
-     * @return bool
-     * @throws InvalidParameters
-     */
-    private function validateParameters(ParamBag $parameters)
-    {
-        $usedParameters = array_keys(iterator_to_array($parameters));
-        if ($invalidParams = array_diff($usedParameters, $this->validParameters)) {
-            throw new InvalidParameters(
-                sprintf('Invalid param(s): "%s". Valid param(s): "%s"',
-                    implode(',', $usedParameters),
-                    implode(',', $this->validParameters)
-                ));
-        }
-
-        return true;
-    }
-
-    /**
      * Returns the includes that are available for eager loading.
      *
      * @param array|string $requestedIncludes Array of csv string
