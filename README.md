@@ -51,41 +51,62 @@ return [
 
 API Controller documentation coming soon.
 
-## Transformer
-
-Fractal's Transformers lazy load all includes by default, by extending NavJobs\LaravelApi\Transformer you can easily
-eager load includes instead:
-
+Just some examples for now:
 ```php
-$transformer = new UserTransformer;
+    /**
+     * Show a list of Books.
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function index(Request $request)
+    {
+        $books = $this->bookModel;
+        $includes = $this->transformer->getEagerLoads($this->fractal->getRequestedIncludes());
 
-$eagerloads = $transformer->getEagerLoads(request('include'));
+        $resumes = $this->eagerLoadIncludes($books, $includes);
+        $resumes = $this->applyParameters($books, $request->query);
 
-$books = Book::with($eagerLoads)->get();
-```
-
-Includes can be sorted by query parameters, the URL format is:
-
-```
-http://www.example.com/books?include=authors:limit(5|1):order(created_at|asc)
-```
-
-This package makes this a cinch to implement in your Transformers:
-
-```php
-//Transformer class
-
-public function includeAuthors(Book $book, ParamBag $parameters = null)
-{
-    $transformer = new AuthorTransformer();
-    $authors = $book->authors();
-
-    if ($parameters) {
-        $authors = $transformer->applyParameters($authors, $parameters);
+        return $this->respondWithPaginatedCollection($books->get(), $this->transformer);
     }
+```
 
-    return $this->collection($authors->get(), $transformer);
-}
+```php
+    /**
+     * Show a Book by the specified id.
+     *
+     * @param Request $request
+     * @param $resumeId
+     * @return mixed
+     */
+    public function show(Request $request, $bookId)
+    {
+        try {
+            $books = $this->resumeModel;
+            $includes = $this->transformer->getEagerLoads($this->fractal->getRequestedIncludes());
+
+            $books = $this->eagerLoadIncludes($books, $includes);
+            $books = $this->applyParameters($books, $request->query);
+
+            $book = $books->findOrFail($bookId);
+        } catch (ModelNotFoundException $e) {
+            return $this->errorNotFound();
+        }
+
+        return $this->respondWithItem($book, $this->transformer);
+    }
+```
+
+Endpoints can be sorted by query parameters, the URL format is:
+
+```
+http://www.example.com/books?limit=5&sort=name,-created_at
+```
+
+Includes can also be sorted by query parameters, the URL format is:
+
+```
+http://www.example.com/books?include=authors:limit(5):sort(name|-created_at)
 ```
 
 ## Fractal
@@ -186,14 +207,14 @@ Notice that `data`-key? That's part of Fractal's default behaviour. Take a look 
 [Fractals's documentation on serializers](http://fractal.thephpleague.com/serializers/) to find out why that happens.
 
 If you want to use another serializer you can specify one with the `serializeWith`-method.
-The `Spatie\Fractal\ArraySerializer` comes out of the box. It removes the `data` namespace for
+The `NavJobs\LaravelApi\ArraySerializer` comes out of the box. It removes the `data` namespace for
 both collections and items.
 
 ```php
 $fractal
    ->collection($books)
    ->transformWith(function($book) { return ['id' => $book['id']];})
-   ->serializeWith(new \Spatie\Fractal\ArraySerializer())
+   ->serializeWith(new \NavJobs\LaravelApi\ArraySerializer())
    ->toArray();
 
 //returns [['id' => 1], ['id' => 2]]
