@@ -51,44 +51,5 @@ class TransformerTest extends TestCase
     }
 
 
-    /**
-     * @test
-     * @expectedException NavJobs\LaravelApi\Exceptions\InvalidParameters
-     */
-    public function it_throws_an_exception_for_invalid_parameters()
-    {
-        $builder = new TestBuilder();
 
-        $transformer = new TestTransformer();
-        $transformer->applyParameters($builder, new ParamBag([
-            'not-valid' => [
-                0 => '1'
-            ]
-        ]));
-    }
-
-    /**
-     * @test
-     */
-    public function it_applies_parameters_to_a_query_builder()
-    {
-        $builder = new TestBuilder();
-
-        $transformer = new TestTransformer();
-        $builder = $transformer->applyParameters($builder, new ParamBag([
-            'limit' => [
-                0 => '5',
-                1 => '2'
-            ],
-            'sort' => [
-                0 => 'created_at',
-                1 => 'desc'
-            ]
-        ]));
-
-        $this->assertEquals(5, $builder->getLimit());
-        $this->assertEquals(2, $builder->getOffset());
-        $this->assertEquals('created_at', $builder->getSort());
-        $this->assertEquals('desc', $builder->getOrder());
-    }
 }
