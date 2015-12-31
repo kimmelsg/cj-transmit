@@ -106,4 +106,18 @@ class IncludesTest extends TestCase
             ->toArray();
         $this->assertEquals($expectedArray, $array);
     }
+
+    /**
+     * @test
+     */
+    public function it_can_parse_include_parameters()
+    {
+        $this->fractal
+            ->collection($this->testBooks, new TestTransformer())
+            ->parseIncludes('characters:sort(-name),publisher:limit(1)')
+            ->toArray();
+
+        $this->assertEquals('-name', $this->fractal->getIncludeParams('characters')->get('sort'));
+        $this->assertEquals(1, $this->fractal->getIncludeParams('publisher')->get('limit'));
+    }
 }
