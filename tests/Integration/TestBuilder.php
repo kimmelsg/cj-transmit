@@ -23,10 +23,10 @@ class TestBuilder
         return $this;
     }
 
-    public function orderBy($sort, $order)
+    public function orderBy($sortColumn, $sortDirection)
     {
-        $this->sort = $sort;
-        $this->order = $order;
+        $this->sort = $sortColumn;
+        $this->order = $sortDirection;
 
         return $this;
     }
