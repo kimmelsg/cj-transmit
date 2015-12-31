@@ -3,6 +3,7 @@
 namespace NavJobs\LaravelApi;
 
 use League\Fractal\Manager;
+use League\Fractal\ParamBag;
 use League\Fractal\Pagination\PaginatorInterface;
 use League\Fractal\Serializer\SerializerAbstract;
 use NavJobs\LaravelApi\Exceptions\InvalidTransformation;
@@ -34,6 +35,13 @@ class Fractal
      * @var array
      */
     protected $includes = [];
+
+    /**
+     * Array containing modifiers as keys and an array value of params.
+     *
+     * @var array
+     */
+    protected $includeParams = [];
 
     /**
      * @var string
@@ -162,15 +170,77 @@ class Fractal
      */
     public function parseIncludes($includes)
     {
+        if (!$includes) {
+            return $this;
+        }
+
         if (is_string($includes)) {
             $includes = array_map(function ($value) {
-               return trim($value);
+                return trim($value);
             },  explode(',', $includes));
         }
 
         $this->includes = array_merge($this->includes, (array)$includes);
+        $this->manager->parseIncludes($this->includes);
+        $this->parseIncludeParams();
 
         return $this;
+    }
+
+    public function parseIncludeParams()
+    {
+        if (!$this->includes) {
+            return;
+        }
+
+        foreach ($this->includes as $include) {
+            list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, null);
+
+            // No Params? Bored
+            if ($allModifiersStr === null) {
+                continue;
+            }
+
+            // Matches multiple instances of 'something(foo|bar|baz)' in the string
+            // I guess it ignores : so you could use anything, but probably don't do that
+            preg_match_all('/([\w]+)(\(([^\)]+)\))?/', $allModifiersStr, $allModifiersArr);
+
+            // [0] is full matched strings...
+            $modifierCount = count($allModifiersArr[0]);
+
+            $modifierArr = [];
+
+            for ($modifierIt = 0; $modifierIt < $modifierCount; $modifierIt++) {
+                // [1] is the modifier
+                $modifierName = $allModifiersArr[1][$modifierIt];
+
+                // and [3] is delimited params
+                // Make modifier array key with the parameter as the value
+                $modifierArr[$modifierName] = $allModifiersArr[3][$modifierIt];
+            }
+
+            $this->includeParams[$includeName] = $modifierArr;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get Include Params.
+     *
+     * @param string $include
+     *
+     * @return \League\Fractal\ParamBag|null
+     */
+    public function getIncludeParams($include)
+    {
+        if (! isset($this->includeParams[$include])) {
+            return;
+        }
+
+        $params = $this->includeParams[$include];
+
+        return new ParamBag($params);
     }
 
     /**
@@ -183,6 +253,10 @@ class Fractal
      */
     public function __call($name, array $arguments)
     {
+        if (method_exists($this->manager, $name)) {
+            return call_user_func_array([$this->manager, $name], $arguments);
+        }
+
         if (!starts_with($name, 'include')) {
             trigger_error('Call to undefined method '.__CLASS__.'::'.$name.'()', E_USER_ERROR);
         }
@@ -208,10 +282,9 @@ class Fractal
 
     /**
      * Set the meta data.
-     *
-     * @param $array,...
-     *
      * @return $this
+     * @internal param $array
+     *
      */
     public function addMeta()
     {
@@ -283,10 +356,6 @@ class Fractal
 
         if (!is_null($this->serializer)) {
             $this->manager->setSerializer($this->serializer);
-        }
-
-        if (!is_null($this->includes)) {
-            $this->manager->parseIncludes($this->includes);
         }
 
         $resource = $this->getResource();
