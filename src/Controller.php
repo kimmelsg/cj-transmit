@@ -250,24 +250,6 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * Determine the includes requested by the user.
-     *
-     * @return array
-     */
-    protected function getRequestedIncludes()
-    {
-        $includes = explode(',', request('include'));
-
-        return array_map(function ($value) {
-            if (str_contains($value, ':')) {
-                return substr($value, 0, strpos($value, ':'));
-            }
-
-            return $value;
-        }, $includes);
-    }
-
-    /**
      * Eager loads the provided includes on the specified model.
      *
      * @param $resumes
