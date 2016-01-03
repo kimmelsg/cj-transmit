@@ -18,11 +18,11 @@ trait ApplyParametersTrait {
         }
 
         if ($parameters->get('sort')) {
-            $this->sortBuilder($builder, $parameters);
+            $builder = $this->sortBuilder($builder, $parameters);
         }
 
         if ($parameters->get('limit')) {
-            $builder->take($parameters->get('limit'))->skip($parameters->get('offset'));
+            $builder = $builder->take($parameters->get('limit'))->skip($parameters->get('offset'));
         }
 
         return $builder;
@@ -42,7 +42,9 @@ trait ApplyParametersTrait {
             $sortDirection = str_contains($sort, '-') ? 'desc' : 'asc';
             $sortColumn = ltrim($sort, '-');
 
-            $builder->orderBy($sortColumn, $sortDirection);
+            $builder = $builder->orderBy($sortColumn, $sortDirection);
         }
+
+        return $builder;
     }
 }
