@@ -6,13 +6,13 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Pagination\LengthAwarePaginator;
-use NavJobs\LaravelApi\Traits\ApplyParametersTrait;
 use Illuminate\Routing\Controller as BaseController;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use NavJobs\LaravelApi\Traits\QueryHelperTrait;
 
 abstract class Controller extends BaseController
 {
-    use ApplyParametersTrait;
+    use QueryHelperTrait;
 
     const CODE_WRONG_ARGS = 'GEN-WRONG-ARGS';
     const CODE_NOT_FOUND = 'GEN-NOT-FOUND';
@@ -247,28 +247,5 @@ abstract class Controller extends BaseController
     protected function errorWrongArgs($message = 'Wrong Arguments')
     {
         return $this->setStatusCode(400)->respondWithError($message, self::CODE_WRONG_ARGS);
-    }
-
-    /**
-     * Eager loads the provided includes on the specified model.
-     *
-     * @param $resumes
-     * @param $includes
-     * @return mixed
-     */
-    protected function eagerLoadIncludes($resumes, $includes)
-    {
-        foreach ($includes as $include) {
-            $resumes = $resumes->with([
-                $include => function ($query) use ($include) {
-                    $parameters = $this->fractal->getIncludeParams($include);
-                    $query = $this->applyParameters($query, $parameters);
-
-                    return $query;
-                }
-            ]);
-        }
-
-        return $resumes;
     }
 }
