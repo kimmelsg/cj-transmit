@@ -15,7 +15,7 @@ trait QueryHelperTrait {
     protected function eagerLoadIncludes($model, $includes)
     {
         foreach ($includes as $include) {
-            if (!$model->include) {
+            if (!$model->$include) {
                 continue;
             }
 
