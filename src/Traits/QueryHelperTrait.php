@@ -2,7 +2,35 @@
 
 namespace NavJobs\LaravelApi\Traits;
 
-trait ApplyParametersTrait {
+trait QueryHelperTrait {
+
+    /**
+     * Eager loads the provided includes on the specified model.
+     * If the class has a fractal instance, will also use include params.
+     *
+     * @param $model
+     * @param $includes
+     * @return mixed
+     */
+    protected function eagerLoadIncludes($model, $includes)
+    {
+        foreach ($includes as $include) {
+            if (!$model->include) {
+                continue;
+            }
+
+            $model = $model->with([
+                $include => function ($query) use ($include) {
+                    $parameters = $this->fractal ? $this->fractal->getIncludeParams($include) : null;
+                    $query = $this->applyParameters($query, $parameters);
+
+                    return $query;
+                }
+            ]);
+        }
+
+        return $model;
+    }
 
     /**
      * Apply query parameters to the supplied query builder.
