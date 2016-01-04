@@ -3,11 +3,11 @@
 namespace NavJobs\LaravelApi\Test\Integration;
 
 use League\Fractal\ParamBag;
-use NavJobs\LaravelApi\Traits\ApplyParametersTrait;
+use NavJobs\LaravelApi\Traits\QueryHelperTrait;
 
-class ApplyParametersTest extends TestCase
+class QueryHelperTraitTest extends TestCase
 {
-    use ApplyParametersTrait;
+    use QueryHelperTrait;
 
     /**
      * @test
