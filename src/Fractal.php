@@ -187,6 +187,9 @@ class Fractal
         return $this;
     }
 
+    /**
+     * @return $this|void
+     */
     public function parseIncludeParams()
     {
         if (!$this->includes) {
