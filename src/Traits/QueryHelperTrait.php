@@ -2,6 +2,8 @@
 
 namespace NavJobs\LaravelApi\Traits;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
+
 trait QueryHelperTrait {
 
     /**
@@ -14,22 +16,22 @@ trait QueryHelperTrait {
      */
     protected function eagerLoadIncludes($model, $includes)
     {
+        $builder = $model;
+
         foreach ($includes as $include) {
             if (!$model->$include) {
                 continue;
             }
 
-            $model = $model->with([
+            $builder = $builder->with([
                 $include => function ($query) use ($include) {
                     $parameters = $this->fractal ? $this->fractal->getIncludeParams($include) : null;
-                    $query = $this->applyParameters($query, $parameters);
-
-                    return $query;
+                    $this->applyParameters($query, $parameters);
                 }
             ]);
         }
 
-        return $model;
+        return $builder;
     }
 
     /**
@@ -49,8 +51,9 @@ trait QueryHelperTrait {
             $builder = $this->sortBuilder($builder, $parameters);
         }
 
+
         if ($parameters->get('limit')) {
-            $builder = $builder->take($parameters->get('limit'))->skip($parameters->get('offset'));
+            $builder = $this->limitBuilder($builder, $parameters);
         }
 
         return $builder;
@@ -74,5 +77,20 @@ trait QueryHelperTrait {
         }
 
         return $builder;
+    }
+
+    /**
+     * Applies limits to the Builder.
+     *
+     * @param $builder
+     * @param $parameters
+     */
+    public function limitBuilder($builder, $parameters)
+    {
+        if (is_a($builder, Relation::class)) {
+            return $builder;
+        }
+
+        return $builder->take($parameters->get('limit'))->skip($parameters->get('offset'));
     }
 }
