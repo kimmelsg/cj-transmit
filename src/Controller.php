@@ -118,7 +118,7 @@ abstract class Controller extends BaseController
         $paginator = $this->paginateCollection($collection, $perPage);
 
         $rootScope = $this->fractal
-            ->collection($collection, $callback, $resourceKey)
+            ->collection($paginator->getCollection(), $callback, $resourceKey)
             ->paginateWith(new IlluminatePaginatorAdapter($paginator));
 
         return $this->respondWithArray($rootScope->toArray());
@@ -132,7 +132,7 @@ abstract class Controller extends BaseController
     protected function paginateCollection($collection, $perPage)
     {
         $paginator = new LengthAwarePaginator(
-            $collection,
+            $collection->forPage(Paginator::resolveCurrentPage(), $perPage),
             $collection->count(),
             $perPage,
             Paginator::resolveCurrentPage(),
