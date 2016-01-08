@@ -12,6 +12,6 @@ class ForeignTransformer extends Transformer
      */
     public function transform($json)
     {
-        return json_decode($json, true);
+        return json_decode($json, true)['data'];
     }
 }
