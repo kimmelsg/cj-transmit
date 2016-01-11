@@ -193,7 +193,7 @@ class Fractal
     public function parseIncludeParams()
     {
         if (!$this->includes) {
-            return;
+            return $this;
         }
 
         foreach ($this->includes as $include) {
