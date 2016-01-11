@@ -1,4 +1,5 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/NavJobs/laravel-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/NavJobs/laravel-api/?branch=master)
+[![Coverage Status](https://coveralls.io/repos/NavJobs/laravel-api/badge.svg?branch=master&service=github)](https://coveralls.io/github/NavJobs/laravel-api?branch=master)
 
 # Laravel Api
 An API package for Laravel. Utilizing [laravel-fractal](https://github.com/spatie/laravel-fractal/tree/master/src).
