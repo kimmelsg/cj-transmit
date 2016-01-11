@@ -41,7 +41,7 @@ trait QueryHelperTrait {
      * @param Symfony\Component\HttpFoundation\ParameterBag|League\Fractal\ParamBag $parameters
      * @return mixed
      */
-    protected function applyParameters($builder, $parameters)
+    protected function applyParameters($builder, $parameters = null)
     {
         if (!$parameters) {
             return $builder;
