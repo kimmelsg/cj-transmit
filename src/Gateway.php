@@ -12,6 +12,7 @@ abstract class Gateway
     use QueryHelperTrait;
 
     protected $statusCode = 200;
+    protected $fractal;
 
     public function __construct()
     {

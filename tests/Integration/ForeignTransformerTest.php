@@ -2,7 +2,6 @@
 
 namespace NavJobs\LaravelApi\Test\Integration;
 
-use League\Fractal\ParamBag;
 use NavJobs\LaravelApi\ForeignTransformer;
 
 class ForeignTransformerTest extends TestCase

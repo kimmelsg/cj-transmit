@@ -21,6 +21,7 @@ abstract class Controller extends BaseController
     const CODE_FORBIDDEN = 'GEN-FORBIDDEN';
 
     protected $statusCode = 200;
+    protected $fractal;
 
     public function __construct()
     {
