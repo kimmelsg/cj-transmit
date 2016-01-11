@@ -2,8 +2,6 @@
 
 namespace NavJobs\LaravelApi\Test\Integration;
 
-use League\Fractal\Resource\ResourceInterface;
-use League\Fractal\Scope;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -17,6 +15,18 @@ class ControllerTest extends TestCase
         parent::setUp();
 
         $this->controller = new ReflectionClass(TestController::class);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_instantiated()
+    {
+        request()->query->add(['include' => 'test']);
+
+        $controller = new TestController();
+
+        $this->assertTrue(isset($controller));
     }
 
     /**
@@ -152,6 +162,165 @@ class ControllerTest extends TestCase
         $parameters = $getQueryParameters->invoke($testController);
 
         $this->assertEquals(['include' => 'test'], $parameters);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_respond_with_an_array()
+    {
+        $respondWithArray = $this->getMethod('respondWithArray');
+        $testController = new TestController();
+
+        $response = $respondWithArray->invokeArgs($testController, [$this->testBooks[0]]);
+        $array = json_decode(json_encode($response->getData()), true);
+
+        $expectedArray = [
+            'id' => 1,
+            'title' => 'Hogfather',
+            'yr' => '1998',
+            'author_name' => 'Philip K Dick',
+            'author_email' => 'philip@example.org',
+            'characters' => [
+                [
+                    'name' => 'Death'
+                ],
+                [
+                    'name' => 'Hex'
+                ]
+            ],
+            'publisher' => 'Elephant books'
+        ];
+
+        $this->assertEquals($expectedArray, $array);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_respond_with_no_content()
+    {
+        $respondWithNoContent = $this->getMethod('respondWithNoContent');
+        $testController = new TestController();
+
+        $response = $respondWithNoContent->invoke($testController);
+
+        $this->assertEquals('204', $response->status());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_respond_with_error_forbidden()
+    {
+        $errorForbidden = $this->getMethod('errorForbidden');
+        $testController = new TestController();
+
+        $response = $errorForbidden->invoke($testController);
+        $array = json_decode(json_encode($response->getData()), true);
+
+        $expectedArray = [
+            'error' => [
+                'code' => 'GEN-FORBIDDEN',
+                'http_code' => 403,
+                'message' => 'Forbidden'
+            ]
+        ];
+
+        $this->assertEquals($expectedArray, $array);
+        $this->assertEquals('403', $response->status());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_respond_with_an_internal_error()
+    {
+        $errorInternalError = $this->getMethod('errorInternalError');
+        $testController = new TestController();
+
+        $response = $errorInternalError->invoke($testController);
+        $array = json_decode(json_encode($response->getData()), true);
+
+        $expectedArray = [
+            'error' => [
+                'code' => 'GEN-INTERNAL-ERROR',
+                'http_code' => 500,
+                'message' => 'Internal Error'
+            ]
+        ];
+
+        $this->assertEquals($expectedArray, $array);
+        $this->assertEquals('500', $response->status());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_respond_with_a_not_found_error()
+    {
+        $errorNotFound = $this->getMethod('errorNotFound');
+        $testController = new TestController();
+
+        $response = $errorNotFound->invoke($testController);
+        $array = json_decode(json_encode($response->getData()), true);
+
+        $expectedArray = [
+            'error' => [
+                'code' => 'GEN-NOT-FOUND',
+                'http_code' => 404,
+                'message' => 'Resource Not Found'
+            ]
+        ];
+
+        $this->assertEquals($expectedArray, $array);
+        $this->assertEquals('404', $response->status());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_respond_with_a_unauthorized_error()
+    {
+        $errorUnauthorized = $this->getMethod('errorUnauthorized');
+        $testController = new TestController();
+
+        $response = $errorUnauthorized->invoke($testController);
+        $array = json_decode(json_encode($response->getData()), true);
+
+        $expectedArray = [
+            'error' => [
+                'code' => 'GEN-UNAUTHORIZED',
+                'http_code' => 401,
+                'message' => 'Unauthorized'
+            ]
+        ];
+
+        $this->assertEquals($expectedArray, $array);
+        $this->assertEquals('401', $response->status());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_respond_with_a_wrong_arguments_error()
+    {
+        $errorWrongArgs = $this->getMethod('errorWrongArgs');
+        $testController = new TestController();
+
+        $response = $errorWrongArgs->invoke($testController);
+        $array = json_decode(json_encode($response->getData()), true);
+
+        $expectedArray = [
+            'error' => [
+                'code' => 'GEN-WRONG-ARGS',
+                'http_code' => 400,
+                'message' => 'Wrong Arguments'
+            ]
+        ];
+
+        $this->assertEquals($expectedArray, $array);
+        $this->assertEquals('400', $response->status());
     }
 
     /**
