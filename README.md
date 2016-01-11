@@ -1,5 +1,6 @@
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/NavJobs/laravel-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/NavJobs/laravel-api/?branch=master)
+[![Build Status](https://circleci.com/gh/NavJobs/laravel-api.svg?style=shield&circle-token=295b93eeb9cfa122d0bd813b58468a0b1fbca278)](https://circleci.com/gh/NavJobs/laravel-api)
 [![Coverage Status](https://coveralls.io/repos/NavJobs/laravel-api/badge.svg?branch=master&service=github)](https://coveralls.io/github/NavJobs/laravel-api?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/NavJobs/laravel-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/NavJobs/laravel-api/?branch=master)
 
 # Laravel Api
 An API package for Laravel. Utilizing [laravel-fractal](https://github.com/spatie/laravel-fractal/tree/master/src).
