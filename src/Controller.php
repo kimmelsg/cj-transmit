@@ -177,24 +177,6 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * Returns a response that indicates an an error occurred.
-     *
-     * @param $message
-     * @param $errorCode
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function respondWithError($message, $errorCode)
-    {
-        return $this->respondWithArray([
-            'error' => [
-                'code'      => $errorCode,
-                'http_code' => $this->statusCode,
-                'message'   => $message,
-            ]
-        ]);
-    }
-
-    /**
      * Returns a response that indicates a 403 Forbidden.
      *
      * @param string $message
@@ -247,5 +229,23 @@ abstract class Controller extends BaseController
     protected function errorWrongArgs($message = 'Wrong Arguments')
     {
         return $this->setStatusCode(400)->respondWithError($message, self::CODE_WRONG_ARGS);
+    }
+
+    /**
+     * Returns a response that indicates an an error occurred.
+     *
+     * @param $message
+     * @param $errorCode
+     * @return \Illuminate\Http\JsonResponse
+     */
+    private function respondWithError($message, $errorCode)
+    {
+        return $this->respondWithArray([
+            'error' => [
+                'code'      => $errorCode,
+                'http_code' => $this->statusCode,
+                'message'   => $message,
+            ]
+        ]);
     }
 }
