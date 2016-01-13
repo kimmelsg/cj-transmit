@@ -1,62 +1,144 @@
+###### Communication Layer For Laravel
+Transmit was created to abstact the process of implementing external APIs and internal communications gateways across microservices.
+
 [![Circle CI](https://circleci.com/gh/NavJobs/laravel-api.svg?style=shield)](https://circleci.com/gh/NavJobs/laravel-api)
 [![Coverage Status](https://coveralls.io/repos/NavJobs/laravel-api/badge.svg?branch=master&service=github)](https://coveralls.io/github/NavJobs/laravel-api?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/NavJobs/laravel-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/NavJobs/laravel-api/?branch=master)
 
-# Laravel Api
-An API package for Laravel. Utilizing [laravel-fractal](https://github.com/spatie/laravel-fractal/tree/master/src).
 
-## Install
+#### Install
 
-You can pull in the package via composer:
+Via Composer:
 ``` bash
-$ composer require NavJobs/laravel-api
+$ composer require NavJobs/Transmit
 ```
 
-Next up, the service provider must be registered:
+Register the service provider in your config/app.php:
 
 ```php
-// Laravel5: config/app.php
 'providers' => [
     ...
-    NavJobs\LaravelApi\LaravelApiServiceProvider::class,
-
+    NavJobs\Transmit\TransmitServiceProvider::class,
 ];
 ```
 
-If you want to change the default serializer, you must publish the config file:
+The package has a publishable config file that allows you to chang the default serializer. To publish:
 
 ```bash
-php artisan vendor:publish --provider="NavJobs\LaravelApi\LaravelApiServiceProvider"
+php artisan vendor:publish --provider="NavJobs\Transmit\TransmitServiceProvider"
 ```
 
-This is the contents of the published file:
+#### Api
+Transmit provides an abstract controller class that you should extend from:
 
 ```php
-return [
+use NavJobs\Transmit\Controller as ApiController;
 
-    /*
-    |--------------------------------------------------------------------------
-    | Default Serializer
-    |--------------------------------------------------------------------------
-    |
-    | The default serializer to be used when performing a transformation. It
-    | may be left empty to use Fractal's default one. This can either be a
-    | string or a League\Fractal\Serializer\SerializerAbstract subclass.
-    |
-    */
-
-    'default_serializer' => '',
-
-];
+class BookController extends ApiController
+{
+...
 ```
 
+The controller class provides a number of methods that make API responses easy:
 
-## Api
-
-API Controller documentation coming soon.
-
-Just some examples for now:
 ```php
+//Return the specified item, transformed
+$this->respondWithItem($item, $optionalTransformer);
+
+//Sets the status code to 201 and return the specified item, transformed
+$this->responsdWithItemCreated($item, $optionalTransformer);
+
+//Return the specified collection, transformed
+$this->respondWithCollection($collection, $optionalTransformer);
+
+//Paginate the specified collection
+$this->respondWithPaginatedCollection($collection, $optionalTransformer, $perPage = 10);
+
+//Set the status code to 204, and return no content
+$this->respondWithNoContent();
+```
+
+Also provided are a number of error methods. These return an error response as well as setting the status code:
+
+```php
+//Sets the status code to 403
+$this->errorForbidden($optionalMessage);
+
+//Sets the status code to 500
+$this->errorInternalError($optionalMessage);
+
+//Sets the status code to 404
+$this->errorNotFound($optionalMessage);
+
+//Sets the status code to 401
+$this->errorUnauthorized($optionalMessage);
+
+//Sets the status code to 400
+$this->errorWrongArgs($optionalMessage);
+```
+
+The controller also uses a the QueryHelperTrait that aids with applying query string parameters to Eloquent models and query builder instances:
+
+```php
+//Eager loads the specified includes on the model
+$this->eagerLoadIncludes($eloquentModel, $includes);
+
+//Applies sort, limit, and offset to the provided query Builder
+$this->applyParameters($queryBuilder, $parameters);
+```
+
+#### Transformers
+Transmit provides an abstract transformer class that your transformers should extend from:
+
+```php
+use NavJobs\LaravelApi\Transformer as BaseTransformer;
+
+class BookTransformer extends BaseTransformer
+...
+```
+
+The transformer allows you to easily determine which relationships should be allowed to be eager loaded. This is determined by matching the requested includes against the available and default includes.
+
+```php
+//Pass in either an array or csv string
+//Returns an array of includes that should be eager loaded
+$this->getEagerLoads($requestedIncludes);
+```
+
+#### Implementation Example
+These methods can be combined to quickly create expressive api controllers. The following is an example of what that implementation might look like:
+
+```php
+<?php
+
+namespace App\Book\Http\Books\Controllers;
+
+use Exception;
+use Illuminate\Http\Request;
+use App\Book\Domain\Books\Entities\Book;
+use App\Book\Transformers\BookTransformer;
+use App\Book\Http\Books\Requests\BookRequest;
+use NavJobs\Transmit\Controller as ApiController;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+class BookController extends ApiController
+{
+    protected $bookModel;
+    protected $transformer;
+    protected $fractal;
+
+    /**
+     * @param Book $bookModel
+     * @param BookTransformer $transformer
+     */
+    public function __construct(Book $bookModel, BookTransformer $transformer)
+    {
+        parent::__construct();
+
+        $this->transformer = $transformer;
+        $this->bookModel = $bookModel;
+    }
+
     /**
      * Show a list of Books.
      *
@@ -65,32 +147,24 @@ Just some examples for now:
      */
     public function index(Request $request)
     {
-        $books = $this->bookModel;
         $includes = $this->transformer->getEagerLoads($this->fractal->getRequestedIncludes());
-
-        $resumes = $this->eagerLoadIncludes($books, $includes);
-        $resumes = $this->applyParameters($books, $request->query);
+        $books = $this->eagerLoadIncludes($this->bookModel, $includes);
+        $books = $this->applyParameters($books, $request->query);
 
         return $this->respondWithPaginatedCollection($books->get(), $this->transformer);
     }
-```
 
-```php
     /**
-     * Show a Book by the specified id.
+     * Show a book by the specified id.
      *
-     * @param Request $request
-     * @param $resumeId
+     * @param $bookId
      * @return mixed
      */
-    public function show(Request $request, $bookId)
+    public function show($bookId)
     {
         try {
-            $books = $this->resumeModel;
             $includes = $this->transformer->getEagerLoads($this->fractal->getRequestedIncludes());
-
-            $books = $this->eagerLoadIncludes($books, $includes);
-            $books = $this->applyParameters($books, $request->query);
+            $books = $this->eagerLoadIncludes($this->bookModel, $includes);
 
             $book = $books->findOrFail($bookId);
         } catch (ModelNotFoundException $e) {
@@ -99,220 +173,105 @@ Just some examples for now:
 
         return $this->respondWithItem($book, $this->transformer);
     }
+
+    /**
+     * Handle the request to persist a Book.
+     *
+     * @param bookRequest $request
+     * @return array
+     */
+    public function store(BookRequest $request)
+    {
+        $book = $this->bookModel->create($request->all());
+
+        return $this->respondWithItemCreated($book, $this->transformer);
+    }
+
+
+    /**
+     * Handle the request to update a Book.
+     *
+     * @param BookRequest $request
+     * @param $bookId
+     * @return mixed
+     */
+    public function update(BookRequest $request, $bookId)
+    {
+        try {
+            $book = $this->bookModel->findOrFail($bookId);
+        } catch (ModelNotFoundException $e) {
+            return $this->errorNotFound();
+        }
+
+        $book->update($request->all());
+
+        return $this->respondWithNoContent();
+    }
+
+    /**
+     * Handle the request to delete a Book.
+     *
+     * @param $bookId
+     * @return mixed
+     */
+    public function destroy($bookId)
+    {
+        try {
+            $book = $this->bookModel->findOrFail($bookId);
+        } catch (ModelNotFoundException $e) {
+            return $this->errorNotFound();
+        }
+
+        try {
+            $book->delete();
+        } catch (Exception $e) {
+            return $this->errorInternalError();
+        }
+
+        return $this->respondWithNoContent();
+    }
+}
 ```
 
-Endpoints can be sorted by query parameters, the URL format is:
+#### Usage
+This implementation allows endpoints to take includes as well as query string parameters. To apply parameters to the current resource:
 
 ```
 http://www.example.com/books?limit=5&sort=name,-created_at
 ```
 
+Includes are available as follows:
+
+```
+http://www.example.com/books?include=authors,publisher
+```
+
 Includes can also be sorted by query parameters, the URL format is:
 
 ```
-http://www.example.com/books?include=authors:limit(5):sort(name|-created_at)
+http://www.example.com/books?include=authors:sort(name|-created_at),publisher
 ```
+
+#### Gateway
+Transmit provides an abstract gateway class that facilitates internal communication in a microservice architecture.
+
+**Gateways are still a work in progress, and not recommended to be used in production yet**
+
+Gateway Documentation coming soon.
 
 ## Fractal
 
-Using Fractal data can be transformed like this:
+Transmit is built on the back of two amazing PHP packages.
+
+- [fractal](https://github.com/thephpleague/fractal)
+- [laravel-fractal](https://github.com/spatie/laravel-fractal/tree/master/src).
+
+Controllers and Gateways have an instance of laravel-fractal available through:
 
 ```php
-use League\Fractal\Manager;
-use League\Fractal\Resource\Collection;
-
-$books = [
-   ['id'=>1, 'title'=>'Hogfather', 'characters' => [...]], 
-   ['id'=>2, 'title'=>'Game Of Kill Everyone', 'characters' => [...]]
-];
-
-$manager = new Manager();
-
-$resource = new Collection($books, new BookTransformer());
-
-$manager->parseIncludes('characters');
-
-$manager->createData($resource)->toArray();
+$this->fractal;
 ```
-
-This package makes that process a tad easier:
-
-```php
-$fractal = new Fractal();
-
-$fractal
-   ->collection($books)
-   ->transformWith(new BookTransformer())
-   ->includeCharacters()
-   ->toArray();
-```
-
-
-
-## Usage
-
-In the following examples were going to use the following array as example input:
-
-```php
-$books = [['id'=>1, 'title'=>'Hogfather'], ['id'=>2, 'title'=>'Game Of Kill Everyone']];
-```
-
-But know that any structure that can be looped (for instance a collection) can be used.
-
-Let's start with a simple transformation.
-
-```php
-$fractal
-   ->collection($books)
-   ->transformWith(function($book) { return ['id' => $book['id']];})
-   ->toArray();
-``` 
-
-This will return:
-```php
-['data' => [['id' => 1], ['id' => 2]]
-```
-
-Instead of using a closure you can also pass [a Transformer](http://fractal.thephpleague.com/transformers/):
-
-```php
-$fractal
-   ->collection($books)
-   ->transformWith(new BookTransformer())
-   ->toArray();
-```
-
-To make your code a bit shorter you could also pass the transform closure or class as a 
-second parameter of the `collection`-method:
-
-```php
-$fractal->collection($books, new BookTransformer())->toArray();
-```
-
-Want to get some sweet json output instead of an array? No problem!
-```php
-$fractal->collection($books, new BookTransformer())->toJson();
-```
-
-A single item can also be transformed:
-```php
-$fractal->item($books[0], new BookTransformer())->toArray();
-```
-
-## Using a serializer
-
-Let's take a look again a the output of the first example:
-
-```php
-['data' => [['id' => 1], ['id' => 2]];
-```
-
-Notice that `data`-key? That's part of Fractal's default behaviour. Take a look at
-[Fractals's documentation on serializers](http://fractal.thephpleague.com/serializers/) to find out why that happens.
-
-If you want to use another serializer you can specify one with the `serializeWith`-method.
-The `NavJobs\LaravelApi\ArraySerializer` comes out of the box. It removes the `data` namespace for
-both collections and items.
-
-```php
-$fractal
-   ->collection($books)
-   ->transformWith(function($book) { return ['id' => $book['id']];})
-   ->serializeWith(new \NavJobs\LaravelApi\ArraySerializer())
-   ->toArray();
-
-//returns [['id' => 1], ['id' => 2]]
-```
-
-### Changing the default serializer
-
-You can change the default serializer by providing the classname or an instantiation of your favorite serializer in
-the config file.
-
-## Using includes
-
-Fractal provides support for [optionally including data](http://fractal.thephpleague.com/transformers/) on the relationships for
-the data you're exporting. You can use Fractal's `parseIncludes` which accepts a string or an array:
-
-```php
-$fractal
-   ->collection($this->testBooks, new TestTransformer())
-   ->parseIncludes(['characters', 'publisher'])
-   ->toArray();
-```
-
-To improve readablity you can also a function named `include` followed by the name
-of the include you want to... include:
-
-```php
-$fractal
-   ->collection($this->testBooks, new TestTransformer())
-   ->includeCharacters()
-   ->includePublisher()
-   ->toArray();
-```
-
-## Including meta data
-
-Fractal has support for including meta data. You can use `addMeta` which accepts 
-one or more arrays:
-
-```php
-$fractal
-   ->collection($this->testBooks, function($book) { return ['name' => $book['name']];})
-   ->addMeta(['key1' => 'value1'], ['key2' => 'value2'])
-   ->toArray();
-```
-
-This will return the following array:
-
-```php
-[
-   'data' => [
-        ['title' => 'Hogfather'],
-        ['title' => 'Game Of Kill Everyone'],
-    ],
-   'meta' => [
-        ['key1' => 'value1'], 
-        ['key2' => 'value2'],
-];
-```
-
-## Using pagination
-
-Fractal provides a Laravel-specific paginator, `IlluminatePaginatorAdapter`, which accepts an instance of Laravel's `LengthAwarePaginator`
-and works with paginated Eloquent results. When using some serializers, such as the `JsonApiSerializer`, pagination data can be
-automatically generated and included in the result set:
-
-```php
-$paginator = Book::paginate(5);
-$books = $paginator->getCollection();
-
-$fractal
-    ->collection($books, new TestTransformer())
-    ->serializeWith(new JsonApiSerializer())
-    ->paginateWith(new IlluminatePaginatorAdapter($paginator))
-    ->toArray();
-```
-
-## Setting a custom resource name
-
-Certain serializers wrap the array output with a `data` element. The name of this element can be customized:
-
-```php
-$fractal
-    ->collection($this->testBooks, new TestTransformer())
-    ->serializeWith(new JsonApiSerializer())
-    ->resourceName('books')
-    ->toArray();
-```
-
-```php
-$fractal
-    ->item($this->testBooks[0], new TestTransformer(), 'book')
-    ->serializeWith(new JsonApiSerializer())
-    ->toArray();
-```
+Any methods available from laravel-fractal can be accessed directly through this intance. Any unknown methods called on the instance are passed through to the fractal manager class. Please refer to the documentation of these packages for additional functionality.
 
 ## Testing
 
