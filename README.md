@@ -1,6 +1,6 @@
 [![Circle CI](https://circleci.com/gh/NavJobs/laravel-api.svg?style=shield)](https://circleci.com/gh/NavJobs/laravel-api)
 [![Coverage Status](https://coveralls.io/repos/NavJobs/laravel-api/badge.svg?branch=master&service=github)](https://coveralls.io/github/NavJobs/laravel-api?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/NavJobs/laravel-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/NavJobs/laravel-api/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/NavJobs/Transmit/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/NavJobs/Transmit/?branch=master)
 
 ###### Communication Layer For Laravel
 Transmit was created to abstact the process of implementing external APIs and internal communications gateways across microservices.
