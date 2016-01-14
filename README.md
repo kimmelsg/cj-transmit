@@ -1,5 +1,5 @@
-[![Circle CI](https://circleci.com/gh/NavJobs/laravel-api.svg?style=shield)](https://circleci.com/gh/NavJobs/laravel-api)
-[![Coverage Status](https://coveralls.io/repos/NavJobs/laravel-api/badge.svg?branch=master&service=github)](https://coveralls.io/github/NavJobs/laravel-api?branch=master)
+[![Circle CI](https://circleci.com/gh/NavJobs/Transmit.svg?style=shield)](https://circleci.com/gh/NavJobs/Transmit)
+[![Coverage Status](https://coveralls.io/repos/NavJobs/Transmit/badge.svg?branch=master&service=github)](https://coveralls.io/github/NavJobs/Transmit?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/NavJobs/Transmit/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/NavJobs/Transmit/?branch=master)
 
 ###### Communication Layer For Laravel
