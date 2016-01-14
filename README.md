@@ -1,6 +1,7 @@
 [![Circle CI](https://circleci.com/gh/NavJobs/Transmit.svg?style=shield)](https://circleci.com/gh/NavJobs/Transmit)
 [![Coverage Status](https://coveralls.io/repos/NavJobs/Transmit/badge.svg?branch=master&service=github)](https://coveralls.io/github/NavJobs/Transmit?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/NavJobs/Transmit/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/NavJobs/Transmit/?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/navjobs/transmit/v/stable)](https://packagist.org/packages/navjobs/transmit) [![Total Downloads](https://poser.pugx.org/navjobs/transmit/downloads)](https://packagist.org/packages/navjobs/transmit) [![License](https://poser.pugx.org/navjobs/transmit/license)](https://packagist.org/packages/navjobs/transmit)
 
 ###### Communication Layer For Laravel
 Transmit was created to abstact the process of implementing external APIs and internal communications gateways across microservices.
