@@ -1,16 +1,13 @@
 <?php
 
-namespace Spatie\Fractal\Test;
+namespace NavJobs\Transmit\Test;
 
 use League\Fractal\Manager;
-use NavJobs\LaravelApi\ArraySerializer;
-use NavJobs\LaravelApi\Fractal;
+use NavJobs\Transmit\ArraySerializer;
+use NavJobs\Transmit\Fractal;
 
 class FractalTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var \Spatie\Fractal\Fractal
-     */
     protected $fractal;
 
     public function setUp()

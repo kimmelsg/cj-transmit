@@ -1,9 +1,9 @@
 <?php
 
-namespace NavJobs\LaravelApi\Test\Integration;
+namespace NavJobs\Transmit\Test\Integration;
 
-use NavJobs\LaravelApi\Controller;
-use NavJobs\LaravelApi\Traits\QueryHelperTrait;
+use NavJobs\Transmit\Controller;
+use NavJobs\Transmit\Traits\QueryHelperTrait;
 
 class TestController extends Controller
 {

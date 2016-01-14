@@ -1,8 +1,8 @@
 <?php
 
-namespace NavJobs\LaravelApi\Test\Integration;
+namespace NavJobs\Transmit\Test\Integration;
 
-use NavJobs\LaravelApi\Gateway;
+use NavJobs\Transmit\Gateway;
 
 class TestGateway extends Gateway
 {

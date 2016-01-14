@@ -1,8 +1,8 @@
 <?php
 
-namespace NavJobs\LaravelApi\Test\Integration;
+namespace NavJobs\Transmit\Test\Integration;
 
-use NavJobs\LaravelApi\ArraySerializer;
+use NavJobs\Transmit\ArraySerializer;
 
 class SerializerTest extends TestCase
 {

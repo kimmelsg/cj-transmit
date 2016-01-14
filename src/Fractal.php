@@ -1,13 +1,13 @@
 <?php
 
-namespace NavJobs\LaravelApi;
+namespace NavJobs\Transmit;
 
 use League\Fractal\Manager;
 use League\Fractal\ParamBag;
 use League\Fractal\Pagination\PaginatorInterface;
 use League\Fractal\Serializer\SerializerAbstract;
-use NavJobs\LaravelApi\Exceptions\InvalidTransformation;
-use NavJobs\LaravelApi\Exceptions\NoTransformerSpecified;
+use NavJobs\Transmit\Exceptions\InvalidTransformation;
+use NavJobs\Transmit\Exceptions\NoTransformerSpecified;
 
 class Fractal
 {

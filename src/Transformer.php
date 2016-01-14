@@ -1,10 +1,8 @@
 <?php
 
-namespace NavJobs\LaravelApi;
+namespace NavJobs\Transmit;
 
-use League\Fractal\ParamBag;
 use League\Fractal\TransformerAbstract;
-use NavJobs\LaravelApi\Exceptions\InvalidParameters;
 
 abstract class Transformer extends TransformerAbstract
 {

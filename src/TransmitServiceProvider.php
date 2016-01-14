@@ -1,12 +1,12 @@
 <?php
 
-namespace NavJobs\LaravelApi;
+namespace NavJobs\Transmit;
 
 use Illuminate\Support\ServiceProvider;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\SerializerAbstract;
 
-class LaravelApiServiceProvider extends ServiceProvider
+class TransmitServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -14,7 +14,7 @@ class LaravelApiServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../resources/config/laravel-api.php' => config_path('laravel-api.php'),
+            __DIR__.'/../resources/config/transmit.php' => config_path('transmit.php'),
         ], 'config');
     }
 
@@ -23,7 +23,7 @@ class LaravelApiServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../resources/config/laravel-api.php', 'laravel-api');
+        $this->mergeConfigFrom(__DIR__.'/../resources/config/transmit.php', 'transmit');
 
         $this->app->bind(Fractal::class, function () {
 
@@ -31,7 +31,7 @@ class LaravelApiServiceProvider extends ServiceProvider
 
             $fractal = new Fractal($manager);
 
-            $config = $this->app['config']->get('laravel-api');
+            $config = $this->app['config']->get('transmit');
 
             if (!empty($config['default_serializer'])) {
                 $fractal = $this->setDefaultSerializer($fractal, $config['default_serializer']);

@@ -1,6 +1,6 @@
 <?php
 
-namespace NavJobs\LaravelApi\Exceptions;
+namespace NavJobs\Transmit\Exceptions;
 
 use Exception;
 

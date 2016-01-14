@@ -1,10 +1,10 @@
 <?php
 
-namespace NavJobs\LaravelApi;
+namespace NavJobs\Transmit;
 
 use League\Fractal\ParamBag;
 use Illuminate\Support\Facades\App;
-use NavJobs\LaravelApi\Traits\QueryHelperTrait;
+use NavJobs\Transmit\Traits\QueryHelperTrait;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 abstract class Gateway

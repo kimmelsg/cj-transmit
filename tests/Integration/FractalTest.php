@@ -1,11 +1,11 @@
 <?php
 
-namespace NavJobs\LaravelApi\Test\Integration;
+namespace NavJobs\Transmit\Test\Integration;
 
 use League\Fractal\Manager;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Scope;
-use NavJobs\LaravelApi\Fractal;
+use NavJobs\Transmit\Fractal;
 use ReflectionClass;
 
 class FractalTest extends TestCase
@@ -145,7 +145,7 @@ class FractalTest extends TestCase
     /**
      * @test
      * @expectedException \ErrorException
-     * @expectedExceptionMessage Call to undefined method NavJobs\LaravelApi\Fractal::nothing()
+     * @expectedExceptionMessage Call to undefined method NavJobs\Transmit\Fractal::nothing()
      */
     public function it_throws_an_error_for_unknown_methods_or_includes()
     {
@@ -154,7 +154,7 @@ class FractalTest extends TestCase
 
     /**
      * @test
-     * @expectedException NavJobs\LaravelApi\Exceptions\InvalidTransformation
+     * @expectedException NavJobs\Transmit\Exceptions\InvalidTransformation
      */
     public function it_throws_an_exception_when_passed_an_invalid_data_type()
     {

@@ -1,8 +1,8 @@
 <?php
 
-namespace NavJobs\LaravelApi\Test\Integration;
+namespace NavJobs\Transmit\Test\Integration;
 
-use NavJobs\LaravelApi\Transformer;
+use NavJobs\Transmit\Transformer;
 
 class TestTransformer extends Transformer
 {

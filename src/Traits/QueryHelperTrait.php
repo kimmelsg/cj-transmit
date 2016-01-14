@@ -1,6 +1,6 @@
 <?php
 
-namespace NavJobs\LaravelApi\Traits;
+namespace NavJobs\Transmit\Traits;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 

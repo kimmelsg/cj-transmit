@@ -1,9 +1,9 @@
 <?php
 
-namespace NavJobs\LaravelApi\Test\Integration;
+namespace NavJobs\Transmit\Test\Integration;
 
 use League\Fractal\ParamBag;
-use NavJobs\LaravelApi\Traits\QueryHelperTrait;
+use NavJobs\Transmit\Traits\QueryHelperTrait;
 
 class QueryHelperTraitTest extends TestCase
 {

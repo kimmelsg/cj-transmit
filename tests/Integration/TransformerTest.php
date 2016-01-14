@@ -1,8 +1,6 @@
 <?php
 
-namespace NavJobs\LaravelApi\Test\Integration;
-
-use League\Fractal\ParamBag;
+namespace NavJobs\Transmit\Test\Integration;
 
 class TransformerTest extends TestCase
 {
@@ -49,7 +47,4 @@ class TransformerTest extends TestCase
 
         $this->assertEquals($expectedArray, $array);
     }
-
-
-
 }

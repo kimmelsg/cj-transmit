@@ -1,6 +1,6 @@
 <?php
 
-namespace NavJobs\LaravelApi\Test\Integration;
+namespace NavJobs\Transmit\Test\Integration;
 
 class MetaTest extends TestCase
 {

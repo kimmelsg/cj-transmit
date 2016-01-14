@@ -1,8 +1,8 @@
 <?php
 
-namespace NavJobs\LaravelApi\Test\Integration;
+namespace NavJobs\Transmit\Test\Integration;
 
-use NavJobs\LaravelApi\ForeignTransformer;
+use NavJobs\Transmit\ForeignTransformer;
 
 class ForeignTransformerTest extends TestCase
 {

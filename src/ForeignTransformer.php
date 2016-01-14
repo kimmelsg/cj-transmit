@@ -1,6 +1,6 @@
 <?php
 
-namespace NavJobs\LaravelApi;
+namespace NavJobs\Transmit;
 
 class ForeignTransformer extends Transformer
 {

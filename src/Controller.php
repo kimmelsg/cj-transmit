@@ -1,6 +1,6 @@
 <?php
 
-namespace NavJobs\LaravelApi;
+namespace NavJobs\Transmit;
 
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\App;
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
-use NavJobs\LaravelApi\Traits\QueryHelperTrait;
+use NavJobs\Transmit\Traits\QueryHelperTrait;
 
 abstract class Controller extends BaseController
 {

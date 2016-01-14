@@ -1,9 +1,9 @@
 <?php
 
-namespace NavJobs\LaravelApi\Test\Integration;
+namespace NavJobs\Transmit\Test\Integration;
 
-use NavJobs\LaravelApi\Fractal;
-use NavJobs\LaravelApi\LaravelApiServiceProvider;
+use NavJobs\Transmit\Fractal;
+use NavJobs\Transmit\TransmitServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
@@ -56,7 +56,7 @@ abstract class TestCase extends Orchestra
      */
     protected function getPackageProviders($app)
     {
-        return [LaravelApiServiceProvider::class];
+        return [TransmitServiceProvider::class];
     }
 
     /**
@@ -67,7 +67,7 @@ abstract class TestCase extends Orchestra
     protected function getEnvironmentSetUp($app)
     {
         if ($this->defaultSerializer != '') {
-            $app['config']->set('laravel-api.default_serializer', $this->defaultSerializer);
+            $app['config']->set('transmit.default_serializer', $this->defaultSerializer);
         }
     }
 }

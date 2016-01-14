@@ -1,13 +1,12 @@
 {
-    "name": "navjobs/laravel-api",
+    "name": "navjobs/transmit",
     "description": "A collection of Laravel api base classes and helpers.",
     "keywords": [
-        "spatie",
-        "laravel-fractal",
         "laravel",
         "fractal",
         "api",
-        "transform"
+        "transform",
+        "microservices"
     ],
     "homepage": "https://kimmel.com",
     "license": "MIT",
@@ -25,12 +24,12 @@
     },
     "autoload": {
         "psr-4": {
-            "NavJobs\\LaravelApi\\": "src"
+            "NavJobs\\Transmit\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "NavJobs\\LaravelApi\\Test\\": "tests"
+            "NavJobs\\Transmit\\Test\\": "tests"
         }
     },
     "scripts": {
