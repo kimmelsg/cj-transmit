@@ -2,7 +2,8 @@
 
 namespace NavJobs\Transmit\Test\Integration;
 
-use NavJobs\Transmit\ArraySerializer;
+use NavJobs\Transmit\Serializers\ArraySerializer;
+use NavJobs\Transmit\Serializers\DataArraySerializer;
 
 class SerializerTest extends TestCase
 {
@@ -35,6 +36,31 @@ class SerializerTest extends TestCase
             ->toArray();
 
         $expectedArray = ['id' => 1, 'author' => 'Philip K Dick'];
+
+        $this->assertEquals($expectedArray, $array);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_a_null_resource_for_a_null_item()
+    {
+        $array = $this->fractal
+            ->item($this->testBooks[0], new TestTransformer())
+            ->parseIncludes(['test'])
+            ->serializeWith(new DataArraySerializer())
+            ->toArray();
+
+
+        $expectedArray = [
+            'data' => [
+                'id' => 1,
+                'author' => 'Philip K Dick',
+                'test' => [
+                    'data' => null
+                ]
+            ]
+        ];
 
         $this->assertEquals($expectedArray, $array);
     }

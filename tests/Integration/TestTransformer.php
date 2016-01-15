@@ -14,6 +14,7 @@ class TestTransformer extends Transformer
     protected $availableIncludes = [
         'characters',
         'publisher',
+        'test'
     ];
 
     /**
@@ -69,5 +70,17 @@ class TestTransformer extends Transformer
         return $this->item([$publisher], function ($publisher) {
             return $publisher;
         });
+    }
+
+    /**
+     * Include test.
+     *
+     * @param array $test
+     *
+     * @return \League\Fractal\ItemResource
+     */
+    public function includeTest(array $test)
+    {
+        return $this->item(null, new TestTransformer());
     }
 }
