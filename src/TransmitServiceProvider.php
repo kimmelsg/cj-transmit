@@ -5,6 +5,7 @@ namespace NavJobs\Transmit;
 use Illuminate\Support\ServiceProvider;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\SerializerAbstract;
+use NavJobs\Transmit\Serializers\DataArraySerializer;
 
 class TransmitServiceProvider extends ServiceProvider
 {
@@ -35,6 +36,8 @@ class TransmitServiceProvider extends ServiceProvider
 
             if (!empty($config['default_serializer'])) {
                 $fractal = $this->setDefaultSerializer($fractal, $config['default_serializer']);
+            } else {
+                $fractal->serializeWith(new DataArraySerializer());
             }
 
             return $fractal;
