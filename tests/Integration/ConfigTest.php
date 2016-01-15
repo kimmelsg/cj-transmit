@@ -2,7 +2,7 @@
 
 namespace NavJobs\Transmit\Test\Integration;
 
-use NavJobs\Transmit\ArraySerializer;
+use NavJobs\Transmit\Serializers\ArraySerializer;
 
 class ConfigTest extends TestCase
 {

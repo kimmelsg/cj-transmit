@@ -1,6 +1,6 @@
 <?php
 
-namespace NavJobs\Transmit;
+namespace NavJobs\Transmit\Serializers;
 
 use League\Fractal\Serializer\ArraySerializer as BaseArraySerializer;
 

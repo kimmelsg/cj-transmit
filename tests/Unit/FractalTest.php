@@ -3,7 +3,7 @@
 namespace NavJobs\Transmit\Test;
 
 use League\Fractal\Manager;
-use NavJobs\Transmit\ArraySerializer;
+use NavJobs\Transmit\Serializers\ArraySerializer;
 use NavJobs\Transmit\Fractal;
 
 class FractalTest extends \PHPUnit_Framework_TestCase
