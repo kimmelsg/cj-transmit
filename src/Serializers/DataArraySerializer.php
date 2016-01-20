@@ -2,6 +2,7 @@
 
 namespace NavJobs\Transmit\Serializers;
 
+use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Serializer\ArraySerializer as BaseArraySerializer;
 
 class DataArraySerializer extends BaseArraySerializer
@@ -16,7 +17,11 @@ class DataArraySerializer extends BaseArraySerializer
      */
     public function collection($resourceKey, array $data)
     {
-        return ['data' => $data];
+        if ($resourceKey === false) {
+            return $data;
+        }
+
+        return $resourceKey ? [$resourceKey => $data] : ['data' => $data];
     }
 
     /**
@@ -29,7 +34,11 @@ class DataArraySerializer extends BaseArraySerializer
      */
     public function item($resourceKey, array $data)
     {
-        return ['data' => $data];
+        if ($resourceKey === false) {
+            return $data;
+        }
+
+        return $resourceKey ? [$resourceKey => $data] : ['data' => $data];
     }
 
     /**
