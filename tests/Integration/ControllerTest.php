@@ -20,7 +20,19 @@ class ControllerTest extends TestCase
     /**
      * @test
      */
-    public function it_can_be_instantiated()
+    public function it_can_be_instantiated_with_header_includes()
+    {
+        request()->headers->add(['include' => 'test']);
+
+        $controller = new TestController();
+
+        $this->assertTrue(isset($controller));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_instantiated_with_query_string_includes()
     {
         request()->query->add(['include' => 'test']);
 

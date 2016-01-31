@@ -27,9 +27,25 @@ abstract class Controller extends BaseController
     {
         $this->fractal = App::make(Fractal::class);
 
-        if (Input::get('include')) {
-            $this->fractal->parseIncludes(Input::get('include'));
+        $this->parseIncludes();
+    }
+
+    /**
+     * Parses includes from either the header or query string.
+     *
+     * @return mixed
+     */
+    protected function parseIncludes()
+    {
+        if (Input::header('include')) {
+            return $this->fractal->parseIncludes(Input::header('include'));
         }
+
+        if (Input::get('include')) {
+            return $this->fractal->parseIncludes(Input::get('include'));
+        }
+
+        return null;
     }
 
     /**
