@@ -146,15 +146,13 @@ class ControllerTest extends TestCase
                 ['id' => 1, 'author' => 'Philip K Dick'],
                 ['id' => 2, 'author' => 'George R. R. Satan'],
             ],
-            'meta' => [
-                'pagination' => [
-                    'total' => 2,
-                    'count' => 2,
-                    'per_page' => 10,
-                    'current_page' => 1,
-                    'total_pages' => 1,
-                    'links' => []
-                ]
+            'pagination' => [
+                'total' => 2,
+                'count' => 2,
+                'per_page' => 10,
+                'current_page' => 1,
+                'total_pages' => 1,
+                'links' => []
             ]
         ];
 

@@ -50,4 +50,20 @@ class DataArraySerializer extends BaseArraySerializer
             'data' => null,
         ];
     }
+
+    /**
+     * Serialize the meta.
+     *
+     * @param array $meta
+     *
+     * @return array
+     */
+    public function meta(array $meta)
+    {
+        if (empty($meta)) {
+            return [];
+        }
+
+        return $meta;
+    }
 }
