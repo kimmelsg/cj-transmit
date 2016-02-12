@@ -258,7 +258,7 @@ abstract class Controller extends BaseController
     private function respondWithError($message, $errorCode)
     {
         return $this->respondWithArray([
-            'error' => [
+            'errors' => [
                 'code'      => $errorCode,
                 'http_code' => $this->statusCode,
                 'message'   => $message,
