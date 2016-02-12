@@ -47,7 +47,7 @@ class DataArraySerializer extends BaseArraySerializer
     public function null()
     {
         return [
-            'data' => null,
+            null
         ];
     }
 
