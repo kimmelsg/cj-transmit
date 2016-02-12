@@ -230,7 +230,7 @@ class ControllerTest extends TestCase
         $array = json_decode(json_encode($response->getData()), true);
 
         $expectedArray = [
-            'error' => [
+            'errors' => [
                 'code' => 'GEN-FORBIDDEN',
                 'http_code' => 403,
                 'message' => 'Forbidden'
@@ -253,7 +253,7 @@ class ControllerTest extends TestCase
         $array = json_decode(json_encode($response->getData()), true);
 
         $expectedArray = [
-            'error' => [
+            'errors' => [
                 'code' => 'GEN-INTERNAL-ERROR',
                 'http_code' => 500,
                 'message' => 'Internal Error'
@@ -276,7 +276,7 @@ class ControllerTest extends TestCase
         $array = json_decode(json_encode($response->getData()), true);
 
         $expectedArray = [
-            'error' => [
+            'errors' => [
                 'code' => 'GEN-NOT-FOUND',
                 'http_code' => 404,
                 'message' => 'Resource Not Found'
@@ -299,7 +299,7 @@ class ControllerTest extends TestCase
         $array = json_decode(json_encode($response->getData()), true);
 
         $expectedArray = [
-            'error' => [
+            'errors' => [
                 'code' => 'GEN-UNAUTHORIZED',
                 'http_code' => 401,
                 'message' => 'Unauthorized'
@@ -322,7 +322,7 @@ class ControllerTest extends TestCase
         $array = json_decode(json_encode($response->getData()), true);
 
         $expectedArray = [
-            'error' => [
+            'errors' => [
                 'code' => 'GEN-WRONG-ARGS',
                 'http_code' => 400,
                 'message' => 'Wrong Arguments'
