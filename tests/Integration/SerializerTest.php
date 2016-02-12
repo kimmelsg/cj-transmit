@@ -57,7 +57,7 @@ class SerializerTest extends TestCase
                 'id' => 1,
                 'author' => 'Philip K Dick',
                 'test' => [
-                    'data' => null
+                    null
                 ]
             ]
         ];
