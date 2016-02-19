@@ -301,7 +301,7 @@ class ControllerTest extends TestCase
         $expectedArray = [
             'errors' => [
                 'code' => 'GEN-UNAUTHORIZED',
-                'http_code' => 401,
+                'http_code' => 403,
                 'message' => 'Unauthorized'
             ]
         ];
