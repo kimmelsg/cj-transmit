@@ -234,7 +234,7 @@ abstract class Controller extends BaseController
      */
     protected function errorUnauthorized($message = 'Unauthorized')
     {
-        return $this->setStatusCode(401)->respondWithError($message, self::CODE_UNAUTHORIZED);
+        return $this->setStatusCode(403)->respondWithError($message, self::CODE_UNAUTHORIZED);
     }
 
     /**
