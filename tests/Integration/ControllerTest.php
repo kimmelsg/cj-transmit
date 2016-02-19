@@ -307,7 +307,7 @@ class ControllerTest extends TestCase
         ];
 
         $this->assertEquals($expectedArray, $array);
-        $this->assertEquals('401', $response->status());
+        $this->assertEquals('403', $response->status());
     }
 
     /**
