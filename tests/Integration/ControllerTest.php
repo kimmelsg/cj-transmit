@@ -301,13 +301,13 @@ class ControllerTest extends TestCase
         $expectedArray = [
             'errors' => [
                 'code' => 'GEN-UNAUTHORIZED',
-                'http_code' => 403,
+                'http_code' => 401,
                 'message' => 'Unauthorized'
             ]
         ];
 
         $this->assertEquals($expectedArray, $array);
-        $this->assertEquals('403', $response->status());
+        $this->assertEquals('401', $response->status());
     }
 
     /**
