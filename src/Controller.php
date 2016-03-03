@@ -19,6 +19,7 @@ abstract class Controller extends BaseController
     const CODE_INTERNAL_ERROR = 'GEN-INTERNAL-ERROR';
     const CODE_UNAUTHORIZED = 'GEN-UNAUTHORIZED';
     const CODE_FORBIDDEN = 'GEN-FORBIDDEN';
+    const CODE_UNPROCESSABLE_ENTITY = 'GEN-UNPROCESSABLE-ENTITY';
 
     protected $statusCode = 200;
     protected $fractal;
@@ -235,6 +236,17 @@ abstract class Controller extends BaseController
     protected function errorUnauthorized($message = 'Unauthorized')
     {
         return $this->setStatusCode(401)->respondWithError($message, self::CODE_UNAUTHORIZED);
+    }
+
+    /**
+     * Returns a response that indicates a 422 Unprocessable Entity.
+     *
+     * @param string $message
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function errorUnprocessableEntity($message = 'Unprocessable Entity')
+    {
+        return $this->setStatusCode(422)->respondWithError($message, self::CODE_UNPROCESSABLE_ENTITY);
     }
 
     /**

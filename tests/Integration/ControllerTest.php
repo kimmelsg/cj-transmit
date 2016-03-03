@@ -313,6 +313,29 @@ class ControllerTest extends TestCase
     /**
      * @test
      */
+    public function it_can_respond_with_an_unprocessable_entity()
+    {
+        $errorUnprocessableEntity = $this->getMethod('errorUnprocessableEntity');
+        $testController = new TestController();
+
+        $response = $errorUnprocessableEntity->invoke($testController);
+        $array = json_decode(json_encode($response->getData()), true);
+
+        $expectedArray = [
+            'errors' => [
+                'code' => 'GEN-UNPROCESSABLE-ENTITY',
+                'http_code' => 422,
+                'message' => 'Unprocessable Entity'
+            ]
+        ];
+
+        $this->assertEquals($expectedArray, $array);
+        $this->assertEquals('422', $response->status());
+    }
+
+    /**
+     * @test
+     */
     public function it_can_respond_with_a_wrong_arguments_error()
     {
         $errorWrongArgs = $this->getMethod('errorWrongArgs');
