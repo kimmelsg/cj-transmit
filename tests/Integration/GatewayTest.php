@@ -85,6 +85,28 @@ class GatewayTest extends TestCase
     /**
      * @test
      */
+    public function it_can_respond_with_a_collection()
+    {
+        $respondWithCollection = $this->getMethod('respondWithCollection');
+        $testGateway = new TestGateway();
+
+        $response = $respondWithCollection->invokeArgs($testGateway, [$this->testBooks, new TestTransformer()]);
+        $array = json_decode($response, true);
+
+        $expectedArray = [
+            'data' => [
+                ['id' => 1, 'author' => 'Philip K Dick'],
+                ['id' => 2, 'author' => 'George R. R. Satan']
+            ],
+            'status_code' => 200
+        ];
+
+        $this->assertEquals($expectedArray, $array);
+    }
+
+    /**
+     * @test
+     */
     public function it_can_parse_parameters()
     {
         $parseParameters = $this->getMethod('parseParameters');

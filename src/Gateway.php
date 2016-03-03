@@ -59,6 +59,21 @@ abstract class Gateway
         return $this->respondWithArray($rootScope->toArray());
     }
 
+    /**
+     * Returns a json response that contains the specified collection
+     * passed through fractal and optionally a transformer.
+     *
+     * @param $collection
+     * @param $callback
+     * @param null $resourceKey
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondWithCollection($collection, $callback, $resourceKey = null)
+    {
+        $rootScope = $this->fractal->collection($collection, $callback, $resourceKey);
+
+        return $this->respondWithArray($rootScope->toArray());
+    }
 
     /**
      * Parses the incoming json parameters into a ParameterBag object.
