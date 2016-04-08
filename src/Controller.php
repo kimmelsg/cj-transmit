@@ -261,6 +261,17 @@ abstract class Controller extends BaseController
     }
 
     /**
+     * Returns a response that indicates multiple errors in an array.
+     *
+     * @param array $errors
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function errorArray(array $errors)
+    {
+        return $this->setStatusCode(422)->respondWithArray(['errors' => $errors]);
+    }
+
+    /**
      * Returns a response that indicates an an error occurred.
      *
      * @param $message
