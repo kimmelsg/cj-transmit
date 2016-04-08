@@ -357,6 +357,27 @@ class ControllerTest extends TestCase
     }
 
     /**
+     * @test
+     */
+    public function it_can_respond_with_an_array_of_errors()
+    {
+        $errorArray = $this->getMethod('errorArray');
+        $testController = new TestController();
+
+        $response = $errorArray->invoke($testController, ['field_name' => 'This field_name had an error.']);
+        $array = json_decode(json_encode($response->getData()), true);
+
+        $expectedArray = [
+            'errors' => [
+                'field_name' => 'This field_name had an error.'
+            ]
+        ];
+
+        $this->assertEquals($expectedArray, $array);
+        $this->assertEquals('422', $response->status());
+    }
+
+    /**
      * @param $methodName
      * @return mixed
      */
