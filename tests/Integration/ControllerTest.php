@@ -346,7 +346,6 @@ class ControllerTest extends TestCase
 
         $expectedArray = [
             'errors' => [
-                'code' => 'GEN-WRONG-ARGS',
                 'http_code' => 400,
                 'message' => 'Wrong Arguments'
             ]

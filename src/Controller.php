@@ -5,21 +5,14 @@ namespace NavJobs\Transmit;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
+use NavJobs\Transmit\Traits\QueryHelperTrait;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
-use NavJobs\Transmit\Traits\QueryHelperTrait;
 
 abstract class Controller extends BaseController
 {
     use QueryHelperTrait;
-
-    const CODE_WRONG_ARGS = 'GEN-WRONG-ARGS';
-    const CODE_NOT_FOUND = 'GEN-NOT-FOUND';
-    const CODE_INTERNAL_ERROR = 'GEN-INTERNAL-ERROR';
-    const CODE_UNAUTHORIZED = 'GEN-UNAUTHORIZED';
-    const CODE_FORBIDDEN = 'GEN-FORBIDDEN';
-    const CODE_UNPROCESSABLE_ENTITY = 'GEN-UNPROCESSABLE-ENTITY';
 
     protected $statusCode = 200;
     protected $fractal;
