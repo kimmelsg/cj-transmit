@@ -195,7 +195,7 @@ abstract class Controller extends BaseController
      */
     protected function errorForbidden($message = 'Forbidden')
     {
-        return $this->setStatusCode(403)->respondWithError($message, self::CODE_FORBIDDEN);
+        return $this->setStatusCode(403)->respondWithError($message);
     }
 
     /**
@@ -206,7 +206,7 @@ abstract class Controller extends BaseController
      */
     protected function errorInternalError($message = 'Internal Error')
     {
-        return $this->setStatusCode(500)->respondWithError($message, self::CODE_INTERNAL_ERROR);
+        return $this->setStatusCode(500)->respondWithError($message);
     }
 
     /**
@@ -217,7 +217,7 @@ abstract class Controller extends BaseController
      */
     protected function errorNotFound($message = 'Resource Not Found')
     {
-        return $this->setStatusCode(404)->respondWithError($message, self::CODE_NOT_FOUND);
+        return $this->setStatusCode(404)->respondWithError($message);
     }
 
     /**
@@ -228,7 +228,7 @@ abstract class Controller extends BaseController
      */
     protected function errorUnauthorized($message = 'Unauthorized')
     {
-        return $this->setStatusCode(401)->respondWithError($message, self::CODE_UNAUTHORIZED);
+        return $this->setStatusCode(401)->respondWithError($message);
     }
 
     /**
@@ -239,7 +239,7 @@ abstract class Controller extends BaseController
      */
     protected function errorUnprocessableEntity($message = 'Unprocessable Entity')
     {
-        return $this->setStatusCode(422)->respondWithError($message, self::CODE_UNPROCESSABLE_ENTITY);
+        return $this->setStatusCode(422)->respondWithError($message);
     }
 
     /**
@@ -250,7 +250,19 @@ abstract class Controller extends BaseController
      */
     protected function errorWrongArgs($message = 'Wrong Arguments')
     {
-        return $this->setStatusCode(400)->respondWithError($message, self::CODE_WRONG_ARGS);
+        return $this->setStatusCode(400)->respondWithError($message);
+    }
+
+    /**
+     * Returns a response that indicates custom error type.
+     *
+     * @param $message
+     * @param $statusCode
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function errorCustomType($message, $statusCode = 400)
+    {
+        return $this->setStatusCode($statusCode)->respondWithError($message);
     }
 
     /**
@@ -268,14 +280,12 @@ abstract class Controller extends BaseController
      * Returns a response that indicates an an error occurred.
      *
      * @param $message
-     * @param $errorCode
      * @return \Illuminate\Http\JsonResponse
      */
-    private function respondWithError($message, $errorCode)
+    private function respondWithError($message)
     {
         return $this->respondWithArray([
             'errors' => [
-                'code'      => $errorCode,
                 'http_code' => $this->statusCode,
                 'message'   => $message,
             ]

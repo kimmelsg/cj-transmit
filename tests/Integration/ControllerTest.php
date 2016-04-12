@@ -231,7 +231,6 @@ class ControllerTest extends TestCase
 
         $expectedArray = [
             'errors' => [
-                'code' => 'GEN-FORBIDDEN',
                 'http_code' => 403,
                 'message' => 'Forbidden'
             ]
@@ -254,7 +253,6 @@ class ControllerTest extends TestCase
 
         $expectedArray = [
             'errors' => [
-                'code' => 'GEN-INTERNAL-ERROR',
                 'http_code' => 500,
                 'message' => 'Internal Error'
             ]
@@ -277,7 +275,6 @@ class ControllerTest extends TestCase
 
         $expectedArray = [
             'errors' => [
-                'code' => 'GEN-NOT-FOUND',
                 'http_code' => 404,
                 'message' => 'Resource Not Found'
             ]
@@ -300,7 +297,6 @@ class ControllerTest extends TestCase
 
         $expectedArray = [
             'errors' => [
-                'code' => 'GEN-UNAUTHORIZED',
                 'http_code' => 401,
                 'message' => 'Unauthorized'
             ]
@@ -323,7 +319,6 @@ class ControllerTest extends TestCase
 
         $expectedArray = [
             'errors' => [
-                'code' => 'GEN-UNPROCESSABLE-ENTITY',
                 'http_code' => 422,
                 'message' => 'Unprocessable Entity'
             ]
@@ -353,6 +348,28 @@ class ControllerTest extends TestCase
 
         $this->assertEquals($expectedArray, $array);
         $this->assertEquals('400', $response->status());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_respond_with_a_custom_error()
+    {
+        $errorCustomType = $this->getMethod('errorCustomType');
+        $testController = new TestController();
+
+        $response = $errorCustomType->invokeArgs($testController, ['Test error', 402]);
+        $array = json_decode(json_encode($response->getData()), true);
+
+        $expectedArray = [
+            'errors' => [
+                'http_code' => 402,
+                'message' => 'Test error'
+            ]
+        ];
+
+        $this->assertEquals($expectedArray, $array);
+        $this->assertEquals('402', $response->status());
     }
 
     /**
