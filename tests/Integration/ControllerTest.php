@@ -2,6 +2,9 @@
 
 namespace NavJobs\Transmit\Test\Integration;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Mockery;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -137,8 +140,11 @@ class ControllerTest extends TestCase
     {
         $respondWithPaginatedCollection = $this->getMethod('respondWithPaginatedCollection');
         $testController = new TestController();
+        $lengthAwarePaginator = new LengthAwarePaginator($this->testBooks, count($this->testBooks), 10);
+        $builder = Mockery::mock(Builder::class);
+        $builder->shouldReceive('paginate')->once()->andReturn($lengthAwarePaginator);
 
-        $response = $respondWithPaginatedCollection->invokeArgs($testController, [collect($this->testBooks), new TestTransformer()]);
+        $response = $respondWithPaginatedCollection->invokeArgs($testController, [$builder, new TestTransformer(), 10]);
         $array = json_decode(json_encode($response->getData()), true);
 
         $expectedArray = [

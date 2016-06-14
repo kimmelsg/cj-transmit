@@ -2,11 +2,10 @@
 
 namespace NavJobs\Transmit;
 
-use Illuminate\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
 use NavJobs\Transmit\Traits\QueryHelperTrait;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 
@@ -118,40 +117,22 @@ abstract class Controller extends BaseController
      * Returns a json response that contains the specified paginated collection
      * passed through fractal and optionally a transformer.
      *
-     * @param $collection
+     * @param $builder
      * @param $callback
      * @param int $perPage
      * @param null $resourceKey
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithPaginatedCollection($collection, $callback, $perPage = 10, $resourceKey = null)
+    protected function respondWithPaginatedCollection(Builder $builder, $callback, $perPage = 10, $resourceKey = null)
     {
-        $paginator = $this->paginateCollection($collection, $perPage);
+        $paginator = $builder->paginate($perPage);
+        $paginator->appends($this->getQueryParameters());
 
         $rootScope = $this->fractal
             ->collection($paginator->getCollection(), $callback, $resourceKey)
             ->paginateWith(new IlluminatePaginatorAdapter($paginator));
 
         return $this->respondWithArray($rootScope->toArray());
-    }
-
-    /**
-     * @param $collection
-     * @param $perPage
-     * @return LengthAwarePaginator
-     */
-    protected function paginateCollection($collection, $perPage)
-    {
-        $paginator = new LengthAwarePaginator(
-            $collection->forPage(Paginator::resolveCurrentPage(), $perPage),
-            $collection->count(),
-            $perPage,
-            Paginator::resolveCurrentPage(),
-            ['path' => Paginator::resolveCurrentPath()]
-        );
-        $paginator->appends($this->getQueryParameters());
-
-        return $paginator;
     }
 
     /**
