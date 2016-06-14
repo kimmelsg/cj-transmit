@@ -123,7 +123,7 @@ abstract class Controller extends BaseController
      * @param null $resourceKey
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithPaginatedCollection(Builder $builder, $callback, $perPage = 10, $resourceKey = null)
+    protected function respondWithPaginatedCollection($builder, $callback, $perPage = 10, $resourceKey = null)
     {
         $paginator = $builder->paginate($perPage);
         $paginator->appends($this->getQueryParameters());
