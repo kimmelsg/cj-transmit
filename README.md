@@ -259,7 +259,7 @@ Transmit is built on the back of two amazing PHP packages.
 - [fractal](https://github.com/thephpleague/fractal)
 - [laravel-fractal](https://github.com/spatie/laravel-fractal/tree/master/src).
 
-Controllers and Gateways have an instance of laravel-fractal available through:
+Controllers have an instance of laravel-fractal available through:
 
 ```php
 $this->fractal;
