@@ -96,6 +96,23 @@ class ControllerTest extends TestCase
     /**
      * @test
      */
+    public function it_can_respond_with_a_single_item_at_the_top_level()
+    {
+        $respondWithItem = $this->getMethod('respondWithItem');
+        $testController = new TestController();
+
+        $response = $respondWithItem->invokeArgs($testController, [$this->testBooks[0], new TestTransformer(), false]);
+        $array = json_decode(json_encode($response->getData()), true);
+
+        $expectedArray = [
+            'id' => 1, 'author' => 'Philip K Dick', ];
+
+        $this->assertEquals($expectedArray, $array);
+    }
+
+    /**
+     * @test
+     */
     public function it_can_respond_with_item_created()
     {
         $respondWithItemCreated = $this->getMethod('respondWithItemCreated');
@@ -122,15 +139,38 @@ class ControllerTest extends TestCase
         $respondWithCollection = $this->getMethod('respondWithCollection');
         $testController = new TestController();
 
+        $expectedData = [
+            ['id' => 1, 'author' => 'Philip K Dick'],
+            ['id' => 2, 'author' => 'George R. R. Satan'],
+        ];
+
         $response = $respondWithCollection->invokeArgs($testController, [$this->testBooks, new TestTransformer()]);
         $array = json_decode(json_encode($response->getData()), true);
 
-        $expectedArray = ['data' => [
+        $this->assertEquals(['data' => $expectedData], $array);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_respond_with_a_collection_as_a_top_level_item()
+    {
+        $respondWithCollection = $this->getMethod('respondWithCollection');
+        $testController = new TestController();
+
+        $expectedData = [
             ['id' => 1, 'author' => 'Philip K Dick'],
             ['id' => 2, 'author' => 'George R. R. Satan'],
-        ]];
+        ];
 
-        $this->assertEquals($expectedArray, $array);
+        $response = $respondWithCollection->invokeArgs($testController, [
+            $this->testBooks,
+            new TestTransformer(),
+            false
+        ]);
+        $array = json_decode(json_encode($response->getData()), true);
+
+        $this->assertEquals($expectedData, $array);
     }
 
     /**
