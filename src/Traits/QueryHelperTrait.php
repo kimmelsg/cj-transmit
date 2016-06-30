@@ -19,16 +19,14 @@ trait QueryHelperTrait {
         $builder = $model;
 
         foreach ($includes as $include) {
-            if (!$model->$include) {
-                continue;
+            if (method_exists($model, $include) && $model->$include() instanceof Relation) {
+                $builder = $builder->with([
+                    $include => function ($query) use ($include) {
+                        $parameters = $this->fractal ? $this->fractal->getIncludeParams($include) : null;
+                        $this->applyParameters($query, $parameters);
+                    }
+                ]);
             }
-
-            $builder = $builder->with([
-                $include => function ($query) use ($include) {
-                    $parameters = $this->fractal ? $this->fractal->getIncludeParams($include) : null;
-                    $this->applyParameters($query, $parameters);
-                }
-            ]);
         }
 
         return $builder;
