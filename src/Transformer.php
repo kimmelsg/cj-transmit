@@ -20,7 +20,7 @@ abstract class Transformer extends TransformerAbstract
         if (is_string($requestedIncludes)) {
             $requestedIncludes = array_map(function ($value) {
                 return trim($value);
-            },  explode(',', $requestedIncludes));
+            }, explode(',', $requestedIncludes));
         }
 
         $availableRequestedIncludes = array_intersect($this->getAvailableIncludes(), $requestedIncludes);
