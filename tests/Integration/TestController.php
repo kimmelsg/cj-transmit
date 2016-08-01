@@ -7,6 +7,5 @@ use NavJobs\Transmit\Traits\QueryHelperTrait;
 
 class TestController extends Controller
 {
-    use QueryHelperTrait;
 
 }
