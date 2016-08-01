@@ -5,13 +5,14 @@ namespace NavJobs\Transmit;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
+use NavJobs\Transmit\Traits\ErrorResponsesTrait;
 use NavJobs\Transmit\Traits\QueryHelperTrait;
 use Illuminate\Routing\Controller as BaseController;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 
 abstract class Controller extends BaseController
 {
-    use QueryHelperTrait;
+    use QueryHelperTrait, ErrorResponsesTrait;
 
     protected $statusCode = 200;
     protected $fractal;
@@ -166,110 +167,5 @@ abstract class Controller extends BaseController
     protected function respondWithNoContent()
     {
         return response()->make('', 204);
-    }
-
-    /**
-     * Returns a response that indicates a 403 Forbidden.
-     *
-     * @param string $message
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function errorForbidden($message = 'Forbidden')
-    {
-        return $this->setStatusCode(403)->respondWithError($message);
-    }
-
-    /**
-     * Returns a response that indicates an Internal Error has occurred.
-     *
-     * @param string $message
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function errorInternalError($message = 'Internal Error')
-    {
-        return $this->setStatusCode(500)->respondWithError($message);
-    }
-
-    /**
-     * Returns a response that indicates a 404 Not Found.
-     *
-     * @param string $message
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function errorNotFound($message = 'Resource Not Found')
-    {
-        return $this->setStatusCode(404)->respondWithError($message);
-    }
-
-    /**
-     * Returns a response that indicates a 401 Unauthorized.
-     *
-     * @param string $message
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function errorUnauthorized($message = 'Unauthorized')
-    {
-        return $this->setStatusCode(401)->respondWithError($message);
-    }
-
-    /**
-     * Returns a response that indicates a 422 Unprocessable Entity.
-     *
-     * @param string $message
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function errorUnprocessableEntity($message = 'Unprocessable Entity')
-    {
-        return $this->setStatusCode(422)->respondWithError($message);
-    }
-
-    /**
-     * Returns a response that indicates the wrong arguments were specified.
-     *
-     * @param string $message
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function errorWrongArgs($message = 'Wrong Arguments')
-    {
-        return $this->setStatusCode(400)->respondWithError($message);
-    }
-
-    /**
-     * Returns a response that indicates custom error type.
-     *
-     * @param $message
-     * @param $statusCode
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function errorCustomType($message, $statusCode = 400)
-    {
-        return $this->setStatusCode($statusCode)->respondWithError($message);
-    }
-
-    /**
-     * Returns a response that indicates multiple errors in an array.
-     *
-     * @param array $errors
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function errorArray(array $errors)
-    {
-        return $this->setStatusCode(422)->respondWithArray(['errors' => $errors]);
-    }
-
-    /**
-     * Returns a response that indicates an an error occurred.
-     *
-     * @param $message
-     * @return \Illuminate\Http\JsonResponse
-     */
-    private function respondWithError($message)
-    {
-        return $this->respondWithArray([
-            'errors' => [
-                'http_code' => $this->statusCode,
-                'message'   => $message,
-            ]
-        ]);
     }
 }
