@@ -46,7 +46,7 @@ The controller class provides a number of methods that make API responses easy:
 $this->respondWithItem($item, $optionalTransformer);
 
 //Sets the status code to 201 and return the specified item, transformed
-$this->responsdWithItemCreated($item, $optionalTransformer);
+$this->respondWithItemCreated($item, $optionalTransformer);
 
 //Return the specified collection, transformed
 $this->respondWithCollection($collection, $optionalTransformer);
