@@ -151,7 +151,7 @@ class BookController extends ApiController
         $books = $this->eagerLoadIncludes($this->bookModel, $includes);
         $books = $this->applyParameters($books, $request->query);
 
-        return $this->respondWithPaginatedCollection($books->get(), $this->transformer);
+        return $this->respondWithPaginatedCollection($books, $this->transformer);
     }
 
     /**
