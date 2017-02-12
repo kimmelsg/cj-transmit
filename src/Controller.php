@@ -70,7 +70,7 @@ abstract class Controller extends BaseController
         $model = $builder ?: $this->model;
 
         $includes = $this->transformer->getEagerLoads($this->fractal->getRequestedIncludes());
-        $includedItems = $this->eagerLoadIncludes($this->model, $includes);
+        $includedItems = $this->eagerLoadIncludes($model, $includes);
         return $this->applyParameters($includedItems, request()->query);
     }
 
