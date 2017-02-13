@@ -65,6 +65,12 @@ abstract class Controller extends BaseController
         return $this;
     }
 
+    /**
+     * Eager load anything that needs to be included
+     *
+     * @param Eloquent Builder
+     * @return $builder
+     */
     private function prepareBuilder($builder)
     {
         $model = $builder ?: $this->model;
