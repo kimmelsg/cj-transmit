@@ -4,7 +4,7 @@ namespace NavJobs\Transmit\Templates;
 
 use NavJobs\Transmit\Controller;
 
-class CourseController extends Controller
+class ResourceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,7 +13,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        return $this->respondWithPaginatedCollection($model);
+        return $this->respondWithPaginatedCollection();
     }
     /**
      * Store a newly created resource in storage.
