@@ -136,8 +136,13 @@ abstract class Controller extends BaseController
      */
     protected function respondWithItemCreated($item, $callback = null)
     {
+        if($callback) {
+            $builder = $this->prepareBuilder($item);
+            $item = $callback($builder);
+        }
+
         $this->setStatusCode(201);
-        $rootScope = $this->fractal->item($item, $callback, $this->resourceKey);
+        $rootScope = $this->fractal->item($item, $this->transformer, is_null($this->resourceKey) ? false : $this->resourceKey);
 
         return $this->respondWithArray($rootScope->toArray());
     }
@@ -150,9 +155,9 @@ abstract class Controller extends BaseController
      * @param $callback
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithCollection($collection, $callback)
+    protected function respondWithCollection($collection)
     {
-        $rootScope = $this->fractal->collection($collection, $callback, $this->resourceKey);
+        $rootScope = $this->fractal->collection($collection, $this->transformer, $this->resourceKey);
 
         return $this->respondWithArray($rootScope->toArray());
     }
