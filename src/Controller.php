@@ -157,7 +157,7 @@ abstract class Controller extends BaseController
      */
     protected function respondWithCollection($collection)
     {
-        $rootScope = $this->fractal->collection($collection, $this->transformer, $this->resourceKey);
+        $rootScope = $this->fractal->collection($collection, $this->transformer, is_null($this->resourceKey) ? false : $this->resourceKey);
 
         return $this->respondWithArray($rootScope->toArray());
     }
