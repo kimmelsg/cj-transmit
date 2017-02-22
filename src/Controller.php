@@ -22,6 +22,38 @@ abstract class Controller extends BaseController
         $this->fractal = App::make(Fractal::class);
 
         $this->parseIncludes();
+
+        $this->resourceKey = null;
+    }
+
+    /**
+     * Sets the fractal transformer
+     *
+     * @return mixed
+     */
+    public function setTransformer($transformer) {
+        $this->transformer = $transformer;
+        return $this;
+    }
+
+    /**
+     * Sets model builder
+     *
+     * @return mixed
+     */
+    public function setModel($model) {
+        $this->model = $model;
+        return $this;
+    }
+
+    /**
+     * Sets resource key for fractal
+     *
+     * @return mixed
+     */
+    public function setResourceKey($resourceKey) {
+        $this->resourceKey = $resourceKey;
+        return $this;
     }
 
     /**
@@ -65,12 +97,6 @@ abstract class Controller extends BaseController
         return $this;
     }
 
-    /**
-     * Eager load anything that needs to be included
-     *
-     * @param Eloquent Builder
-     * @return $builder
-     */
     private function prepareBuilder($builder)
     {
         $model = $builder ?: $this->model;
@@ -86,17 +112,16 @@ abstract class Controller extends BaseController
      *
      * @param $item
      * @param null $callback
-     * @param null $resourceKey
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithItem($item, $callback = null, $resourceKey = false)
+    protected function respondWithItem($item, $callback = null)
     {
         if($callback) {
             $builder = $this->prepareBuilder($item);
             $item = $callback($builder);
         }
 
-        $rootScope = $this->fractal->item($item, $this->transformer, $resourceKey);
+        $rootScope = $this->fractal->item($item, $this->transformer, is_null($this->resourceKey) ? false : $this->resourceKey);
 
         return $this->respondWithArray($rootScope->toArray());
     }
@@ -107,13 +132,12 @@ abstract class Controller extends BaseController
      *
      * @param $item
      * @param null $callback
-     * @param null $resourceKey
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithItemCreated($item, $callback = null, $resourceKey = false)
+    protected function respondWithItemCreated($item, $callback = null)
     {
         $this->setStatusCode(201);
-        $rootScope = $this->fractal->item($item, $callback, $resourceKey);
+        $rootScope = $this->fractal->item($item, $callback, $this->resourceKey);
 
         return $this->respondWithArray($rootScope->toArray());
     }
@@ -124,12 +148,11 @@ abstract class Controller extends BaseController
      *
      * @param $collection
      * @param $callback
-     * @param null $resourceKey
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithCollection($collection, $callback, $resourceKey = false)
+    protected function respondWithCollection($collection, $callback)
     {
-        $rootScope = $this->fractal->collection($collection, $callback, $resourceKey);
+        $rootScope = $this->fractal->collection($collection, $callback, $this->resourceKey);
 
         return $this->respondWithArray($rootScope->toArray());
     }
@@ -141,10 +164,9 @@ abstract class Controller extends BaseController
      * @param $builder
      * @param $callback
      * @param int $perPage
-     * @param null $resourceKey
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithPaginatedCollection($builder = null, $perPage = 10, $resourceKey = null)
+    protected function respondWithPaginatedCollection($builder = null, $perPage = 10)
     {
         $builder = $this->prepareBuilder($builder);
 
@@ -152,7 +174,7 @@ abstract class Controller extends BaseController
         $paginator->appends($this->getQueryParameters());
 
         $rootScope = $this->fractal
-            ->collection($paginator->getCollection(), $this->transformer, $resourceKey)
+            ->collection($paginator->getCollection(), $this->transformer, $this->resourceKey)
             ->paginateWith(new IlluminatePaginatorAdapter($paginator));
 
         return $this->respondWithArray($rootScope->toArray());
