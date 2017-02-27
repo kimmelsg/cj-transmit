@@ -28,7 +28,7 @@ The package has a publishable config file that allows you to chang the default s
 php artisan vendor:publish --provider="NavJobs\Transmit\TransmitServiceProvider"
 ```
 
-#### Example
+#### Full-featured Resource Routes
 Transmit provides resource traits that will handle resource methods for you. If you plan on doing more than what is defined in them, ([see them here](/src/Traits)) simply don't import the Trait and respond with an item, collection, etc when you are finished.
 
 ```php
@@ -82,8 +82,15 @@ The controller class provides a number of methods that make API responses easy:
 //Return the specified item, transformed
 $this->respondWithItem($item);
 
+//or pass a callback and model instance, this way includes will be parsed
+
+return $this->respondWithItem($this->model, function ($model) use ($id) {
+    return $model->findOrFail($id);
+});
+
+
 //Sets the status code to 201 and return the specified item, transformed
-$this->respondWithItemCreated($item);
+$this->respondWithItemCreated($item, $cb = null);
 
 //Return the specified collection, transformed
 $this->respondWithCollection($collection);
