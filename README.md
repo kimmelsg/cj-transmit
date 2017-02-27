@@ -28,13 +28,50 @@ The package has a publishable config file that allows you to chang the default s
 php artisan vendor:publish --provider="NavJobs\Transmit\TransmitServiceProvider"
 ```
 
+#### Example
+Transmit provides resource traits that will handle resource methods for you. If you plan on doing more than what is defined in them, ([see them here](/src/Traits)) simply don't import the Trait and respond with an item, collection, etc when you are finished.
+
+```php
+<?php
+
+namespace App\Book\Http\Books\Controllers;
+
+use Exception;
+use Illuminate\Http\Request;
+use App\Book\Domain\Books\Entities\Book;
+use App\Book\Transformers\BookTransformer;
+
+use NavJobs\Transmit\Controller;
+use NavJobs\Transmit\Traits\{ Index, Show, Update, Store, Delete };
+
+class BookController extends Controller
+{
+    use Index, Show, Update, Store, Delete;
+
+    /**
+     * @param Book $bookModel
+     * @param BookTransformer $transformer
+     */
+    public function __construct(Book $bookModel, BookTransformer $transformer)
+    {
+        parent::__construct();
+
+        $this
+          ->setTransformer($transformer)
+          ->setModel($bookModel);
+    }
+}
+```
+
+
+
 #### Api
 Transmit provides an abstract controller class that you should extend from:
 
 ```php
-use NavJobs\Transmit\Controller as ApiController;
+use NavJobs\Transmit\Controller;
 
-class BookController extends ApiController
+class BookController extends Controller
 {
 ...
 ```
@@ -43,16 +80,16 @@ The controller class provides a number of methods that make API responses easy:
 
 ```php
 //Return the specified item, transformed
-$this->respondWithItem($item, $optionalTransformer);
+$this->respondWithItem($item);
 
 //Sets the status code to 201 and return the specified item, transformed
-$this->respondWithItemCreated($item, $optionalTransformer);
+$this->respondWithItemCreated($item);
 
 //Return the specified collection, transformed
-$this->respondWithCollection($collection, $optionalTransformer);
+$this->respondWithCollection($collection);
 
 //Paginate the specified collection
-$this->respondWithPaginatedCollection($collection, $optionalTransformer, $perPage = 10);
+$this->respondWithPaginatedCollection($collection, $perPage = 10);
 
 //Set the status code to 204, and return no content
 $this->respondWithNoContent();
@@ -97,141 +134,9 @@ class BookTransformer extends BaseTransformer
 ...
 ```
 
-The transformer allows you to easily determine which relationships should be allowed to be eager loaded. This is determined by matching the requested includes against the available and default includes.
-
-```php
-//Pass in either an array or csv string
-//Returns an array of includes that should be eager loaded
-$this->getEagerLoads($requestedIncludes);
-```
-
-#### Implementation Example
-These methods can be combined to quickly create expressive api controllers. The following is an example of what that implementation might look like:
-
-```php
-<?php
-
-namespace App\Book\Http\Books\Controllers;
-
-use Exception;
-use Illuminate\Http\Request;
-use App\Book\Domain\Books\Entities\Book;
-use App\Book\Transformers\BookTransformer;
-use App\Book\Http\Books\Requests\BookRequest;
-use NavJobs\Transmit\Controller as ApiController;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-class BookController extends ApiController
-{
-    protected $bookModel;
-    protected $transformer;
-    protected $fractal;
-
-    /**
-     * @param Book $bookModel
-     * @param BookTransformer $transformer
-     */
-    public function __construct(Book $bookModel, BookTransformer $transformer)
-    {
-        parent::__construct();
-
-        $this->transformer = $transformer;
-        $this->bookModel = $bookModel;
-    }
-
-    /**
-     * Show a list of Books.
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function index(Request $request)
-    {
-        $includes = $this->transformer->getEagerLoads($this->fractal->getRequestedIncludes());
-        $books = $this->eagerLoadIncludes($this->bookModel, $includes);
-        $books = $this->applyParameters($books, $request->query);
-
-        return $this->respondWithPaginatedCollection($books, $this->transformer);
-    }
-
-    /**
-     * Show a book by the specified id.
-     *
-     * @param $bookId
-     * @return mixed
-     */
-    public function show($bookId)
-    {
-        try {
-            $includes = $this->transformer->getEagerLoads($this->fractal->getRequestedIncludes());
-            $books = $this->eagerLoadIncludes($this->bookModel, $includes);
-
-            $book = $books->findOrFail($bookId);
-        } catch (ModelNotFoundException $e) {
-            return $this->errorNotFound();
-        }
-
-        return $this->respondWithItem($book, $this->transformer);
-    }
-
-    /**
-     * Handle the request to persist a Book.
-     *
-     * @param bookRequest $request
-     * @return array
-     */
-    public function store(BookRequest $request)
-    {
-        $book = $this->bookModel->create($request->all());
-
-        return $this->respondWithItemCreated($book, $this->transformer);
-    }
+The transformer allows you to easily determine which relationships should be allowed to be eager loaded. This is determined by matching the requested includes against the available and default includes. Transmit does this in the background.
 
 
-    /**
-     * Handle the request to update a Book.
-     *
-     * @param BookRequest $request
-     * @param $bookId
-     * @return mixed
-     */
-    public function update(BookRequest $request, $bookId)
-    {
-        try {
-            $book = $this->bookModel->findOrFail($bookId);
-        } catch (ModelNotFoundException $e) {
-            return $this->errorNotFound();
-        }
-
-        $book->update($request->all());
-
-        return $this->respondWithNoContent();
-    }
-
-    /**
-     * Handle the request to delete a Book.
-     *
-     * @param $bookId
-     * @return mixed
-     */
-    public function destroy($bookId)
-    {
-        try {
-            $book = $this->bookModel->findOrFail($bookId);
-        } catch (ModelNotFoundException $e) {
-            return $this->errorNotFound();
-        }
-
-        try {
-            $book->delete();
-        } catch (Exception $e) {
-            return $this->errorInternalError();
-        }
-
-        return $this->respondWithNoContent();
-    }
-}
-```
 
 #### Usage
 This implementation allows endpoints to take includes as well as query string parameters. To apply parameters to the current resource:
