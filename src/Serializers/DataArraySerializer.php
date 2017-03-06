@@ -34,7 +34,7 @@ class DataArraySerializer extends BaseArraySerializer
      */
     public function item($resourceKey, array $data)
     {
-        if ($resourceKey === false) {
+        if (!$resourceKey) {
             return $data;
         }
 
