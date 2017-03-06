@@ -90,13 +90,19 @@ abstract class Controller extends BaseController
         return $this;
     }
 
-    private function prepareBuilder($builder)
+    /**
+     * Eager load any available includes and apply query parameters.
+     *
+     * @param $builder
+     * @return mixed
+     */
+    protected function withIncludes($builder)
     {
-        $model = $builder ?: $this->model;
-
         $includes = $this->transformer->getEagerLoads($this->fractal->getRequestedIncludes());
-        $includedItems = $this->eagerLoadIncludes($model, $includes);
-        return $this->applyParameters($includedItems, request()->query);
+        $includedItems = $this->eagerLoadIncludes($builder, $includes);
+        $this->applyParameters($includedItems, request()->query);
+
+        return $builder;
     }
 
     /**
@@ -164,7 +170,7 @@ abstract class Controller extends BaseController
      */
     protected function respondWithPaginatedCollection($builder, $perPage = 10)
     {
-        $builder = $this->prepareBuilder($builder);
+        $builder = $this->withIncludes($builder);
 
         $paginator = $builder->paginate($perPage);
         $paginator->appends($this->getQueryParameters());
