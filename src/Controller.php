@@ -33,13 +33,6 @@ abstract class Controller extends BaseController
     {
         $this->transformer = $transformer;
 
-    /**
-     * Sets model builder
-     *
-     * @return mixed
-     */
-    public function setModel($model) {
-        $this->model = $model;
         return $this;
     }
 
