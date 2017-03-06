@@ -14,6 +14,10 @@ trait Index
      */
      public function index()
      {
+         if ($this->shouldAuthorize) {
+             $this->authorize('index', get_class($this->model));
+         }
+
          return $this->respondWithPaginatedCollection($this->model);
      }
 }

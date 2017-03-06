@@ -47,6 +47,16 @@ abstract class Controller extends BaseController
     }
 
     /**
+     * Calls authorization methods on the default traits
+     *
+     * @return mixed
+     */
+    public function shouldAuthorize() {
+        $this->shouldAuthorize = true;
+        return $this;
+    }
+
+    /**
      * Sets resource key for fractal
      *
      * @return mixed

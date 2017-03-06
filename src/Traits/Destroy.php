@@ -14,7 +14,13 @@ trait Destroy
      */
     public function destroy($id)
     {
-        $this->model->findOrFail($id)->delete();
+        $item = $this->model->findOrFail($id);
+
+        if ($this->shouldAuthorize) {
+            $this->authorize('delete', $item);
+        }
+
+        $item->delete();
         return $this->respondWithNoContent();
     }
 }

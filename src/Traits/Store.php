@@ -14,6 +14,10 @@ trait Store
      */
     public function store()
     {
+        if ($this->shouldAuthorize) {
+            $this->authorize('create', get_class($this->model));
+        }
+
         $item = $this->model->create(request()->all());
         return $this->respondWithItem($item);
     }

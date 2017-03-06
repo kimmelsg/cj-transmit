@@ -59,6 +59,7 @@ class BookController extends Controller
         $this
           ->setTransformer($transformer)
           ->setModel($bookModel);
+        //optionally add `shouldAuthorize` to add authorize checks in built in traits
     }
 }
 ```

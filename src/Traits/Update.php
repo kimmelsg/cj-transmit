@@ -18,6 +18,11 @@ trait Update
     {
         return $this->respondWithItem($this->model, function ($model) use ($id, $request) {
             $item = $model->findOrFail($id);
+
+            if ($this->shouldAuthorize) {
+                $this->authorize('update', $item);
+            }
+
             $item->fill($request->all());
             $item->save();
             return $item;

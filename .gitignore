@@ -4,3 +4,4 @@ docs
 vendor
 
 .idea
+.DS_Store

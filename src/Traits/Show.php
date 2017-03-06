@@ -15,7 +15,13 @@ trait Show
     public function show($id)
     {
         return $this->respondWithItem($this->model, function ($model) use ($id) {
-            return $model->findOrFail($id);
+            $item = $model->findOrFail($id);
+
+            if ($this->shouldAuthorize) {
+                $this->authorize('view', $item);
+            }
+
+            return $item;
         });
     }
 }
