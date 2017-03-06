@@ -2,11 +2,9 @@
 
 namespace NavJobs\Transmit;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
-use NavJobs\Transmit\Traits\ErrorResponsesTrait;
 use NavJobs\Transmit\Traits\QueryHelperTrait;
+use NavJobs\Transmit\Traits\ErrorResponsesTrait;
 use Illuminate\Routing\Controller as BaseController;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 
@@ -20,7 +18,7 @@ abstract class Controller extends BaseController
 
     public function __construct()
     {
-        $this->fractal = App::make(Fractal::class);
+        $this->fractal = app(Fractal::class);
 
         $this->parseIncludes();
     }
@@ -28,12 +26,12 @@ abstract class Controller extends BaseController
     /**
      * Sets the fractal transformer
      *
+     * @param $transformer
      * @return mixed
      */
-    public function setTransformer($transformer) {
+    public function setTransformer($transformer)
+    {
         $this->transformer = $transformer;
-        return $this;
-    }
 
     /**
      * Sets model builder
@@ -48,10 +46,13 @@ abstract class Controller extends BaseController
     /**
      * Sets resource key for fractal
      *
+     * @param $resourceKey
      * @return mixed
      */
-    public function setResourceKey($resourceKey) {
+    public function setResourceKey($resourceKey)
+    {
         $this->resourceKey = $resourceKey;
+
         return $this;
     }
 
@@ -115,8 +116,8 @@ abstract class Controller extends BaseController
      */
     protected function respondWithItem($item, $callback = null)
     {
-        if($callback) {
-            $builder = $this->prepareBuilder($item);
+        if ($callback) {
+            $builder = $this->withIncludes($item);
             $item = $callback($builder);
         }
 
@@ -135,8 +136,8 @@ abstract class Controller extends BaseController
      */
     protected function respondWithItemCreated($item, $callback = null)
     {
-        if($callback) {
-            $builder = $this->prepareBuilder($item);
+        if ($callback) {
+            $builder = $this->withIncludes($item);
             $item = $callback($builder);
         }
 
@@ -151,7 +152,6 @@ abstract class Controller extends BaseController
      * passed through fractal and optionally a transformer.
      *
      * @param $collection
-     * @param $callback
      * @return \Illuminate\Http\JsonResponse
      */
     protected function respondWithCollection($collection)
@@ -166,11 +166,10 @@ abstract class Controller extends BaseController
      * passed through fractal and optionally a transformer.
      *
      * @param $builder
-     * @param $callback
      * @param int $perPage
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithPaginatedCollection($builder = null, $perPage = 10)
+    protected function respondWithPaginatedCollection($builder, $perPage = 10)
     {
         $builder = $this->prepareBuilder($builder);
 
