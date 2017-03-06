@@ -15,15 +15,14 @@ abstract class Controller extends BaseController
     use QueryHelperTrait, ErrorResponsesTrait;
 
     protected $statusCode = 200;
-    protected $fractal;
+    protected $resourceKey = null;
+    protected $fractal, $transformer;
 
     public function __construct()
     {
         $this->fractal = App::make(Fractal::class);
 
         $this->parseIncludes();
-
-        $this->resourceKey = null;
     }
 
     /**
