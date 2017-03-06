@@ -121,7 +121,7 @@ abstract class Controller extends BaseController
             $item = $callback($builder);
         }
 
-        $rootScope = $this->fractal->item($item, $this->transformer, is_null($this->resourceKey) ? false : $this->resourceKey);
+        $rootScope = $this->fractal->item($item, $this->transformer, $this->resourceKey);
 
         return $this->respondWithArray($rootScope->toArray());
     }
@@ -142,7 +142,7 @@ abstract class Controller extends BaseController
         }
 
         $this->setStatusCode(201);
-        $rootScope = $this->fractal->item($item, $this->transformer, is_null($this->resourceKey) ? false : $this->resourceKey);
+        $rootScope = $this->fractal->item($item, $this->transformer, $this->resourceKey);
 
         return $this->respondWithArray($rootScope->toArray());
     }
@@ -157,7 +157,7 @@ abstract class Controller extends BaseController
      */
     protected function respondWithCollection($collection)
     {
-        $rootScope = $this->fractal->collection($collection, $this->transformer, is_null($this->resourceKey) ? false : $this->resourceKey);
+        $rootScope = $this->fractal->collection($collection, $this->transformer, $this->resourceKey);
 
         return $this->respondWithArray($rootScope->toArray());
     }
