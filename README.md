@@ -48,6 +48,10 @@ class BookController extends Controller
 {
     use Index, Show, Update, Store, Delete;
 
+    //this is optional and will call authorize methods on default traits
+    
+    public $shouldAuthorize = true;
+
     /**
      * @param Book $bookModel
      * @param BookTransformer $transformer
@@ -59,7 +63,6 @@ class BookController extends Controller
         $this
           ->setTransformer($transformer)
           ->setModel($bookModel);
-        //optionally add `shouldAuthorize` to add authorize checks in built in traits
     }
 }
 ```
