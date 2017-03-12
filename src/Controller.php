@@ -3,6 +3,7 @@
 namespace NavJobs\Transmit;
 
 use Illuminate\Support\Facades\Input;
+use Illuminate\Database\Eloquent\Builder;
 use NavJobs\Transmit\Traits\QueryHelperTrait;
 use NavJobs\Transmit\Traits\ErrorResponsesTrait;
 use Illuminate\Routing\Controller as BaseController;
@@ -155,6 +156,10 @@ abstract class Controller extends BaseController
      */
     protected function respondWithCollection($collection)
     {
+        if (is_a($collection, Builder::class)) {
+            $collection = $this->withIncludes($collection);
+        }
+
         $rootScope = $this->fractal->collection($collection, $this->transformer, $this->resourceKey);
 
         return $this->respondWithArray($rootScope->toArray());
