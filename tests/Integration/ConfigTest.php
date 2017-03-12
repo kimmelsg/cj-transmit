@@ -6,7 +6,7 @@ use NavJobs\Transmit\Serializers\ArraySerializer;
 
 class ConfigTest extends TestCase
 {
-    public function setUp()
+    public function setUp($defaultSerializer = '')
     {
         parent::setup(ArraySerializer::class);
     }
