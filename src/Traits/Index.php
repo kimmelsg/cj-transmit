@@ -1,15 +1,12 @@
 <?php
 
-namespace NavJobs\Transmit\Transmitters;
-
-use NavJobs\Transmit\Controller;
+namespace NavJobs\Transmit\Traits;
 
 trait Index
 {
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
      public function index()

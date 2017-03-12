@@ -1,8 +1,6 @@
 <?php
 
-namespace NavJobs\Transmit\Transmitters;
-
-use NavJobs\Transmit\Controller;
+namespace NavJobs\Transmit\Traits;
 
 trait Show
 {

@@ -1,29 +1,25 @@
 <?php
 
-namespace NavJobs\Transmit\Transmitters;
-
-use NavJobs\Transmit\Controller;
-use Illuminate\Http\Request;
+namespace NavJobs\Transmit\Traits;
 
 trait Update
 {
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update($id, Request $request)
+    public function update($id)
     {
-        return $this->respondWithItem($this->model, function ($model) use ($id, $request) {
+        return $this->respondWithItem($this->model, function ($model) use ($id) {
             $item = $model->findOrFail($id);
 
             if ($this->shouldAuthorize) {
                 $this->authorize('update', $item);
             }
 
-            $item->fill($request->all());
+            $item->fill(request()->all());
             $item->save();
             return $item;
         });
