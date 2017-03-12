@@ -2,11 +2,11 @@
 
 namespace NavJobs\Transmit\Test\Integration;
 
-use League\Fractal\Manager;
-use League\Fractal\Resource\ResourceInterface;
-use League\Fractal\Scope;
-use NavJobs\Transmit\Fractal;
 use ReflectionClass;
+use League\Fractal\Scope;
+use League\Fractal\Manager;
+use NavJobs\Transmit\Fractal;
+use League\Fractal\Resource\ResourceInterface;
 
 class FractalTest extends TestCase
 {
