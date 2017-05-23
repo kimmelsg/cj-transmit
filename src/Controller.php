@@ -166,6 +166,6 @@ abstract class Controller extends BaseController
      */
     protected function respondWithNoContent()
     {
-        return response()->make('', 204);
+        return response()->json('', 204);
     }
 }
