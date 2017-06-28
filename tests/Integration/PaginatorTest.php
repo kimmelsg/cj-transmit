@@ -3,8 +3,8 @@
 namespace NavJobs\Transmit\Test\Integration;
 
 use Illuminate\Pagination\LengthAwarePaginator;
+use NavJobs\Transmit\Serializers\DataArraySerializer;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
-use League\Fractal\Serializer\JsonApiSerializer;
 
 class PaginatorTest extends TestCase
 {
@@ -16,7 +16,7 @@ class PaginatorTest extends TestCase
         $books = [$this->testBooks[0]];
         $array = $this->fractal
             ->collection($books, new TestTransformer())
-            ->serializeWith(new JsonApiSerializer())
+            ->serializeWith(new DataArraySerializer())
             ->paginateWith(new IlluminatePaginatorAdapter(
                 new LengthAwarePaginator($books, 2, 1)
             ))
@@ -26,22 +26,17 @@ class PaginatorTest extends TestCase
             'data' => [
                 [
                     'id' => 1,
-                    'type' => null,
-                    'attributes' => [
-                        'author' => 'Philip K Dick',
-                    ],
+                    'author' => 'Philip K Dick',
                 ],
             ],
-            'meta' => [
-                'pagination' => [
-                    'total' => 2,
-                    'count' => 1,
-                    'per_page' => 1,
-                    'current_page' => 1,
-                    'total_pages' => 2,
-                    'links' => [
-                        'next' => '/?page=2',
-                    ],
+            'pagination' => [
+                'total' => 2,
+                'count' => 1,
+                'per_page' => 1,
+                'current_page' => 1,
+                'total_pages' => 2,
+                'links' => [
+                    'next' => '/?page=2',
                 ],
             ],
         ];

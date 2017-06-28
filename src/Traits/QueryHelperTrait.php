@@ -62,6 +62,7 @@ trait QueryHelperTrait {
      *
      * @param $builder
      * @param $parameters
+     * @return mixed
      */
     protected function sortBuilder($builder, $parameters)
     {
@@ -82,6 +83,7 @@ trait QueryHelperTrait {
      *
      * @param $builder
      * @param $parameters
+     * @return mixed
      */
     public function limitBuilder($builder, $parameters)
     {

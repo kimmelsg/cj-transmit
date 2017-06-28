@@ -2,18 +2,14 @@
 
 namespace NavJobs\Transmit\Test\Integration;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Mockery;
 use ReflectionClass;
-use ReflectionMethod;
 
 class ErrorResponsesTest extends TestCase
 {
 
     protected $controller;
 
-    public function setUp()
+    public function setUp($defaultSerializer = '')
     {
         parent::setUp();
 

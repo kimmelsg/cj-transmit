@@ -2,11 +2,10 @@
 
 namespace NavJobs\Transmit;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
-use NavJobs\Transmit\Traits\ErrorResponsesTrait;
+use Illuminate\Database\Eloquent\Builder;
 use NavJobs\Transmit\Traits\QueryHelperTrait;
+use NavJobs\Transmit\Traits\ErrorResponsesTrait;
 use Illuminate\Routing\Controller as BaseController;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 
@@ -15,13 +14,40 @@ abstract class Controller extends BaseController
     use QueryHelperTrait, ErrorResponsesTrait;
 
     protected $statusCode = 200;
-    protected $fractal;
+    protected $resourceKey = null;
+    protected $fractal, $transformer;
 
     public function __construct()
     {
-        $this->fractal = App::make(Fractal::class);
+        $this->fractal = app(Fractal::class);
 
         $this->parseIncludes();
+    }
+
+    /**
+     * Sets the fractal transformer
+     *
+     * @param $transformer
+     * @return mixed
+     */
+    public function setTransformer($transformer)
+    {
+        $this->transformer = $transformer;
+
+        return $this;
+    }
+
+    /**
+     * Sets resource key for fractal
+     *
+     * @param $resourceKey
+     * @return mixed
+     */
+    public function setResourceKey($resourceKey)
+    {
+        $this->resourceKey = $resourceKey;
+
+        return $this;
     }
 
     /**
@@ -66,17 +92,36 @@ abstract class Controller extends BaseController
     }
 
     /**
+     * Eager load any available includes and apply query parameters.
+     *
+     * @param $builder
+     * @return mixed
+     */
+    protected function withIncludes($builder)
+    {
+        $includes = $this->transformer->getEagerLoads($this->fractal->getRequestedIncludes());
+        $includedItems = $this->eagerLoadIncludes($builder, $includes);
+        $this->applyParameters($includedItems, request()->query);
+
+        return $builder;
+    }
+
+    /**
      * Returns a json response that contains the specified resource
      * passed through fractal and optionally a transformer.
      *
      * @param $item
      * @param null $callback
-     * @param null $resourceKey
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithItem($item, $callback = null, $resourceKey = null)
+    protected function respondWithItem($item, $callback = null)
     {
-        $rootScope = $this->fractal->item($item, $callback, $resourceKey);
+        if ($callback) {
+            $builder = $this->withIncludes($item);
+            $item = $callback($builder);
+        }
+
+        $rootScope = $this->fractal->item($item, $this->transformer, $this->resourceKey);
 
         return $this->respondWithArray($rootScope->toArray());
     }
@@ -87,13 +132,17 @@ abstract class Controller extends BaseController
      *
      * @param $item
      * @param null $callback
-     * @param null $resourceKey
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithItemCreated($item, $callback = null, $resourceKey = null)
+    protected function respondWithItemCreated($item, $callback = null)
     {
+        if ($callback) {
+            $builder = $this->withIncludes($item);
+            $item = $callback($builder);
+        }
+
         $this->setStatusCode(201);
-        $rootScope = $this->fractal->item($item, $callback, $resourceKey);
+        $rootScope = $this->fractal->item($item, $this->transformer, $this->resourceKey);
 
         return $this->respondWithArray($rootScope->toArray());
     }
@@ -103,13 +152,15 @@ abstract class Controller extends BaseController
      * passed through fractal and optionally a transformer.
      *
      * @param $collection
-     * @param $callback
-     * @param null $resourceKey
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithCollection($collection, $callback, $resourceKey = null)
+    protected function respondWithCollection($collection)
     {
-        $rootScope = $this->fractal->collection($collection, $callback, $resourceKey);
+        if (is_a($collection, Builder::class)) {
+            $collection = $this->withIncludes($collection);
+        }
+
+        $rootScope = $this->fractal->collection($collection, $this->transformer, $this->resourceKey);
 
         return $this->respondWithArray($rootScope->toArray());
     }
@@ -119,18 +170,18 @@ abstract class Controller extends BaseController
      * passed through fractal and optionally a transformer.
      *
      * @param $builder
-     * @param $callback
      * @param int $perPage
-     * @param null $resourceKey
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithPaginatedCollection($builder, $callback, $perPage = 10, $resourceKey = null)
+    protected function respondWithPaginatedCollection($builder, $perPage = 10)
     {
+        $builder = $this->withIncludes($builder);
+
         $paginator = $builder->paginate($perPage);
         $paginator->appends($this->getQueryParameters());
 
         $rootScope = $this->fractal
-            ->collection($paginator->getCollection(), $callback, $resourceKey)
+            ->collection($paginator->getCollection(), $this->transformer, $this->resourceKey)
             ->paginateWith(new IlluminatePaginatorAdapter($paginator));
 
         return $this->respondWithArray($rootScope->toArray());

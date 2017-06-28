@@ -2,18 +2,18 @@
 
 namespace NavJobs\Transmit\Test\Integration;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Mockery;
 use ReflectionClass;
 use ReflectionMethod;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ControllerTest extends TestCase
 {
 
     protected $controller;
 
-    public function setUp()
+    public function setUp($defaultSerializer = '')
     {
         parent::setUp();
 
@@ -83,8 +83,9 @@ class ControllerTest extends TestCase
     {
         $respondWithItem = $this->getMethod('respondWithItem');
         $testController = new TestController();
+        $testController = $testController->setTransformer(new TestTransformer);
 
-        $response = $respondWithItem->invokeArgs($testController, [$this->testBooks[0], new TestTransformer()]);
+        $response = $respondWithItem->invokeArgs($testController, [$this->testBooks[0]]);
         $array = json_decode(json_encode($response->getData()), true);
 
         $expectedArray = ['data' => [
@@ -100,8 +101,9 @@ class ControllerTest extends TestCase
     {
         $respondWithItem = $this->getMethod('respondWithItem');
         $testController = new TestController();
+        $testController = $testController->setTransformer(new TestTransformer)->setResourceKey(false);
 
-        $response = $respondWithItem->invokeArgs($testController, [$this->testBooks[0], new TestTransformer(), false]);
+        $response = $respondWithItem->invokeArgs($testController, [$this->testBooks[0]]);
         $array = json_decode(json_encode($response->getData()), true);
 
         $expectedArray = [
@@ -118,8 +120,9 @@ class ControllerTest extends TestCase
         $respondWithItemCreated = $this->getMethod('respondWithItemCreated');
         $getStatusCode = $this->getMethod('getStatusCode');
         $testController = new TestController();
+        $testController = $testController->setTransformer(new TestTransformer);
 
-        $response = $respondWithItemCreated->invokeArgs($testController, [$this->testBooks[0], new TestTransformer()]);
+        $response = $respondWithItemCreated->invokeArgs($testController, [$this->testBooks[0]]);
         $array = json_decode(json_encode($response->getData()), true);
 
         $expectedArray = ['data' => [
@@ -138,13 +141,14 @@ class ControllerTest extends TestCase
     {
         $respondWithCollection = $this->getMethod('respondWithCollection');
         $testController = new TestController();
+        $testController = $testController->setTransformer(new TestTransformer);
 
         $expectedData = [
             ['id' => 1, 'author' => 'Philip K Dick'],
             ['id' => 2, 'author' => 'George R. R. Satan'],
         ];
 
-        $response = $respondWithCollection->invokeArgs($testController, [$this->testBooks, new TestTransformer()]);
+        $response = $respondWithCollection->invokeArgs($testController, [$this->testBooks]);
         $array = json_decode(json_encode($response->getData()), true);
 
         $this->assertEquals(['data' => $expectedData], $array);
@@ -157,17 +161,14 @@ class ControllerTest extends TestCase
     {
         $respondWithCollection = $this->getMethod('respondWithCollection');
         $testController = new TestController();
+        $testController = $testController->setTransformer(new TestTransformer)->setResourceKey(false);
 
         $expectedData = [
             ['id' => 1, 'author' => 'Philip K Dick'],
             ['id' => 2, 'author' => 'George R. R. Satan'],
         ];
 
-        $response = $respondWithCollection->invokeArgs($testController, [
-            $this->testBooks,
-            new TestTransformer(),
-            false
-        ]);
+        $response = $respondWithCollection->invokeArgs($testController, [$this->testBooks]);
         $array = json_decode(json_encode($response->getData()), true);
 
         $this->assertEquals($expectedData, $array);
@@ -180,11 +181,12 @@ class ControllerTest extends TestCase
     {
         $respondWithPaginatedCollection = $this->getMethod('respondWithPaginatedCollection');
         $testController = new TestController();
+        $testController = $testController->setTransformer(new TestTransformer);
         $lengthAwarePaginator = new LengthAwarePaginator($this->testBooks, count($this->testBooks), 10);
         $builder = Mockery::mock(Builder::class);
         $builder->shouldReceive('paginate')->once()->andReturn($lengthAwarePaginator);
 
-        $response = $respondWithPaginatedCollection->invokeArgs($testController, [$builder, new TestTransformer(), 10]);
+        $response = $respondWithPaginatedCollection->invokeArgs($testController, [$builder, 10]);
         $array = json_decode(json_encode($response->getData()), true);
 
         $expectedArray = [

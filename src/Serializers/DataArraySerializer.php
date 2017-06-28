@@ -2,7 +2,6 @@
 
 namespace NavJobs\Transmit\Serializers;
 
-use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Serializer\ArraySerializer as BaseArraySerializer;
 
 class DataArraySerializer extends BaseArraySerializer
